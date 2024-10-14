@@ -41,7 +41,7 @@ Die Verwendung von Patterns erhöht meist die Komplexität des Entwurfs bzw. der
 
 ---
 
-# Template Methode
+# Beispiel eines Patterns and der Template Methode
 Die Template Methode ist ein Basisbeispiel der Polymorhie [^1]. 
 Hier implementiert eine abstrakte Klasse Figur eine Methode um diese Figur zu zeichnen. Da jedoch alle Klassen die von Figur erben eigene Formen darstellen müssen diese unterschiedlich gezeichnet werden. Dafür wird die in Figur deklarierte draw-Methode in jeder erbenden Klasse konkret implementiert.
 
@@ -61,9 +61,35 @@ Hier ergibt sich der Nachteil, dass in jeder Implementierung von draw der prepar
 Die Oberklasse gesaltet hier den allgemeinen Ablauf des Zeichnens, beschreibt aber nicht das spezifische Zeichnen der einzelnen Figuren.
 - Durch die prepare() Methode, welche in der Oberklasse implementiert wird werden alle Parameter(Farbe) gesetzt, diese bleibt den Unterklassen verborgen.
 - doDraw() ist eine abstrakte Methode die von den Unterklassen überschrieben werden muss, hier wird die Logik für die spezifischen Figuren definiert.
+=> Simpel gesagt es wird nur die draw()-Methode der Oberklasse aufgerufen welche "versteckt" die abstrakte Methode doDraw() aufruft. Da doDraw() abstract ist muss jede Klasse die von Figur erbt diese für sich implementieren. Dadurch ist es möglich draw() immer aufzurufen, da bei Aufruf die Farbwerte von der Oberklasse gesetzt und die doDraw von der erbenden Klasse bereitgestellt wird.
 
 
+# Creational Patterns 
+Der Vorteil objektorientierter Sprachen sind Klassen und verwendung von Polymorphie (Bsp. abstrakte Schnittstellen)
+**Problem:** Polymorphie funktioniert nicht bei der Erzeugung von konkreten Objekten. Hier muss jedes mal Explizit der Typ angegeben werden.
 
+<img src="Bilder/Polymorphie_CP_Seite_2.png" width="400">
+
+## Factory Pattern
+Eine einfache Variante ist die Bereitstellung von Erzeugungsmethoden, welche den gewünschten Typ zurückgeben
+```
+public final class ListFactory
+{
+    private ListFactory( ) {}
+    public static <T> List<T> newArrayList()
+    {
+        return new ArrayList<T>();
+    }
+    public static <T> List<T> newLinkedList()
+    {
+        return new LinkedList<T>();
+    }
+}
+```
+
+Alternativ kann die Erzeugung der Objekte über eine zentrale Factoy-Methode laufen
+
+<img src="Bilder/Polymorphe_Objekterzeugung_UML.png" width="300">
 
 
 
