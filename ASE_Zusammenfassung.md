@@ -47,7 +47,7 @@ Hier implementiert eine abstrakte Klasse Figur eine Methode um diese Figur zu ze
 
 <img src="Bilder/Template_Pattern.png" width=500>
 
-## Problem 1: Die konkrere Implementierung von draw() benötigt einen Zugriff auf den Farbwert
+## Problem 1: Die konkrete Implementierung von draw() benötigt einen Zugriff auf den Farbwert
 
 ### Lösung 1: Implementierung eines Farbattributes
 <img src="Bilder/Template_Pattern_Lösung_01.png" width=400>
@@ -71,8 +71,8 @@ Der Vorteil objektorientierter Sprachen sind Klassen und verwendung von Polymorp
 <img src="Bilder/Polymorphie_CP_Seite_2.png" width="400">
 
 ## Factory Pattern
-Eine einfache Variante ist die Bereitstellung von Erzeugungsmethoden, welche den gewünschten Typ zurückgeben
-```
+> Eine einfache Variante ist die Bereitstellung von Erzeugungsmethoden, welche ein Objekt des gewünschten Typs zurückgeben
+```java
 public final class ListFactory
 {
     private ListFactory( ) {}
@@ -87,14 +87,128 @@ public final class ListFactory
 }
 ```
 
-Alternativ kann die Erzeugung der Objekte über eine zentrale Factoy-Methode laufen
+## Abstract Factory Pattern
+> Über spezielle Objekte (sogenannte abstract Factories) soll der Erzeugungskontext automatisch ermittelt werden
 
-<img src="Bilder/Polymorphe_Objekterzeugung_UML.png" width="300">
+Dabei wird per Interface eine Methode welche das Objekt bereitstellt erzeugt und jedes Objekt welches von diesem Interface erbt stellt die jeweilig benötigte Implementierung bereit.
+<img src="Bilder/Abstract_Factory.png" width="400">
 
+### Beispiel zwei überlappende Factories
 
+<img src="Bilder/Zwei_überlappende_abstract_Factories.png" width="400">
 
+## Builder Pattern
 
+Das Builder Pattern soll die Konstruktion eines Objektes von seiner Repräsentation trennen. Dadurch kann das gleiche Erstellungsverfahren unterschiedliche Arten und Darstellungen von Objekten erzeugen.
 
+> **Problem**: Wenn mehrere ähnliche Konstruktorparameter gesetzt werden sollen müssen diese im Konstruktor klar definiert sein! Gerade in Java kann der Konstruktor die unterschiedlichen Parameter nicht anhand des Namens sondern nur anhand des Datentyps unterscheiden.
+```java
+class A{
+    A(int a, b){}
+    A(int b, c){} //Fehler
+    A(int a, c){} //Fehler
+}
+```
+>Per Setter Methoden könnte jeder Parameter einzeln gesetzt werden, was jedoch eine große Fehlerquelle darstellt, da die Initialisierung eines Objektes über mehrere Zeilen geschehen müsste.
+
+Das Builder Pattern löst dieses Problem indem es indem innerhalb einer Klasse eine interne Builderklasse erzeugt wird. Diese erhält für jeden Parameter der Klasse ein äquivalent und wird an den Konstruktor der zu bauenden Klasse übergeben. 
+>Dadurch ist es möglich die Hauptklasse immutable zu halten und jedem Parameter unabhängig voneinander konfigurieren zu können.
+
+```java
+Class A{
+    private int a;
+    private int b;
+    private int c;
+    A(ABuilder builder){
+        this.a = builder.a;
+        this.b = builder.b;
+        this.c = builder.c;
+    }
+    class ABuilder{
+        int a = 0;
+        int b = 0;
+        int c = 0;
+        public ABuilder setA(int a){
+            this.a = a;
+            return this;
+        }
+        public ABuilder setB(int b){
+            this.b = b;
+            return this;
+        }
+        public ABuilder setC(int c){
+            this.c = c;
+            return this;
+        }
+        Public A build(){
+            return new A(this);
+        }
+    }
+}
+```
+Daraus ergibt sich der Aufruf
+```java
+A a = new A.ABuilder().setA(1).setB(2).setC(3).build();
+```
+
+## Singleton
+> Das Singleton-Pattern besagt, dass höchstens ein Objekt der Klasse existieren darf.
+>> In der Regel soll von überall auf das Objekt zugegriffen werden können(Global Accessible) => **Das Singleton ist keine globale Variable!**
+
+**Lazy Implementierung**
+>**nicht** thread-safe!
+```java
+public class Singleton {
+    private static Singleton instance;
+    private Singleton() { }
+    public static Singleton getInstance()
+    {
+        if( instance == null )
+        {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+```
+**Eager Implementierung**
+>thread-safe
+>> Instanziierung an das Laden der Klasse gebunden
+```java
+public class Singleton
+{
+    private static Singleton instance = new Singleton();
+    private Singleton() { }
+    public static Singleton getInstance()
+    {
+        return instance;
+    }
+}
+```
+**Implementierung mit Holder-Klasse**
+>**Java only**
+
+Erzeugung des Singletons an das Laden der internen Klasse gebunden
+```java
+public class HolderSingleton
+    {
+    public static class Holder
+    {
+    private static HolderSingleton instance = new HolderSingleton();
+    }
+    public static HolderSingleton getInstance()
+    {
+        return Holder.instance;
+    }
+    private HolderSingleton() { }
+}
+```
+## Prototype Pattern
+>Copy & Paste & Modify
+
+Es existiert ein vorgefertigtes Objekt, welches entsprechend seiner angezielten Nutzung konfiguriert wird.
+
+# Structural Patterns
 
 
 
