@@ -212,6 +212,72 @@ Es existiert ein vorgefertigtes Objekt, welches entsprechend seiner angezielten 
 
 # Structural Patterns
 
+Structural Patterns kommen zur Compilezeit und beschreiben die Beziehungen zwischen Objekten
+
+## Adapter Pattern
+Den Adapter gibt es in zwei Versionen(Objekt-Adapter / Klassen-Adapter)
+
+>Lollypop Schnittstelle -o )-
+
+Adapter werden verwendet um zwei Objekte/Schnittstellen miteinander kompatibel zu machen 
+> []-o )-[]-o )-[]
+
+> **Kompatibilität zwischen Schnittstellen => Keine neue Funktionalität => Nur eine Delegation**
+
+## Decorator
+
+>*"Ich habe ein Objekt welches ich funktional erweitere => Ich füge Funktionalität hinzu behalte aber den Typ bei"*
+
+Unterschied zu Wrapper = Wrapper fügt in Java keine Funktionalität hinzu
+Wrapper = Typkonvertierung 
+
+Decorator erweitert Objekt und bestimmte Funktionalitäten => Pizza/Visierbeispiel da das Objekt beliebig "Dekoriert" werden kann
+
+Problem bei Decorator => **Großer Vererbungszweig/Vererbungsbäume entstehen**
+
+Dekoratoren werden oft in Ketten Organisiert
+
+(Dekorator 1) -> (Dekorator 2) -> (Dekorator 3) -> (Konkretes Objekt)
+
+> Wichtig ist, dass jeder Operator so behandelt werden kann wie das Objekt **Austauschbarkeit**
+
+Kein Referenzvergleich == mehr möglich 
+Gleichheit und Hashvalue müssen angepasst werden.
+
+> Das hat den Hintergrund da hier die Fragestellung aufkommt was wird verglichen (Das Originalobjekt oder die Decoration)
+
+Erzeugung von Decoratoren wird meist durch Factories implementiert
+
+Dekoratoren verdecken die Objekt-ID des ursprünglichen Objekts
+
+## Decorator vs Adapter
+
+Dekorator erweiter Funktionalität der Schnittstelle
+Adapter verbindet zwei nicht kompatible Schnittstellen (interface mix-in)
+
+## Proxy
+
+Stellvertreter Objekt um zu verhindern, dass ein direkter Zugriff auf ein Objekt entsteht
+
+Remote Proxy: Bsp. Remote Zugriff auf ein Objekt 
+
+P1  Netzwerk P2
+[] - () - []
+
+Um von P1 in Daten von P2 Zugriff zu bekommen baue ich einen Stellvertreter in P1 welcher auf die Objekte in P2 per Netzwerkrequest zugreifen kann
+
+>**Nicht Read-Only** Per Set Methode können die Daten in P2 auch bearbeitet werden
+>>Es geht also nur um den stellvertretenden Zugriff auf ein Fremdes Objekt ohne direkten Zugriff auf das Objekt zu haben.
+
+>(alt)RMI / (neu)REST
+
+## Adapter vs. Decorator vs. Proxy
+
+Adapter = Überbrückung zweier Schnittstellen
+Decorator = Erweitert Verhalten des ursprünglichen Objekts
+Proxy = Besitzt selbe Schnittstelle und zeigt selbes Verhalten wie das "abgeschirmte" Objekt
+
+
 ## Bridge Pattern
 >*"Wenn sie Bridge Pattern hören denken sie immer an die golden gate Brigde, sie verbinden zwei Landzungen" => "Adapter für Klassenhierarchien"*
 
@@ -241,6 +307,7 @@ Facade = Keine Isolierung des Sub-Systems "Concevience Einstellung" => Soll idR.
 Verschachtelung => Bsp. Directory 
 
 Knoten kann wieder Knoten enthalten (Baum-Datenstruktur, Dateisystem)
+
 
 
 
