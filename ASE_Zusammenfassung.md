@@ -4,7 +4,9 @@
 
 # Patterns 
 ## Definition
-Design Patterns sind bewährte Lösungsschablonen für wiederkehrende Entwurfsprobleme.
+>Design Patterns sind bewährte Lösungsschablonen für wiederkehrende Entwurfsprobleme.
+>> **Für Simon => Patterns sind low level also Proxy z.B. ist keine API weil das schon viel zu weit Abstrahiert ist**
+
 ## Eigenschaften
 - ein oder mehrere Probleme lösen
 - ein erprobtes Konzept bieten
@@ -12,12 +14,12 @@ Design Patterns sind bewährte Lösungsschablonen für wiederkehrende Entwurfspr
 - über das rein Offensichtliche hinausgehen
 - Beziehungen aufzeigen, die tiefergehende Strukturen und Mechanismen eines Systems umfassen
 ## Implementierung
-Ein Pattern ist ein abstrakter Lösungsentwurf, welcher verschiedene Designs haben kann. Diese können unterschiedlich designt werden und diese Designs können jeweils wieder unterschiedlich implementiert werden.
+>Ein Pattern ist ein abstrakter Lösungsentwurf, welcher verschiedene Designs haben kann. Diese können unterschiedlich designt werden und diese Designs können jeweils wieder unterschiedlich implementiert werden.
 <!--![](/Bilder/Pattern_Design_Implementation.png)-->
 <img src="Bilder/Pattern_Design_Implementation.png" width="300">
 
 ## Einteilung von Patterns
-Patterns können in drei Kathegorien unterschieden werden 
+>Patterns können in drei Kathegorien unterschieden werden 
 - Creational
 - Structural
 - Behavioral
@@ -94,16 +96,101 @@ Alternativ kann die Erzeugung der Objekte über eine zentrale Factoy-Methode lau
 
 
 
+Structural Patterns kommen zur Compilezeit und beschreiben die Beziehungen zwischen Objekten
+
+## Adapter Pattern
+Den Adapter gibt es in zwei Versionen(Objekt-Adapter / Klassen-Adapter)
+
+>Lollypop Schnittstelle -o )-
+
+Adapter werden verwendet um zwei Objekte/Schnittstellen miteinander kompatibel zu machen 
+> []-o )-[]-o )-[]
+
+> **Kompatibilität zwischen Schnittstellen => Keine neue Funktionalität => Nur eine Delegation**
+
+## Decorator
+
+>*"Ich habe ein Objekt welches ich funktional erweitere => Ich füge Funktionalität hinzu behalte aber den Typ bei"*
+
+Unterschied zu Wrapper = Wrapper fügt in Java keine Funktionalität hinzu
+Wrapper = Typkonvertierung 
+
+Decorator erweitert Objekt und bestimmte Funktionalitäten => Pizza/Visierbeispiel da das Objekt beliebig "Dekoriert" werden kann
+
+Problem bei Decorator => **Großer Vererbungszweig/Vererbungsbäume entstehen**
+
+Dekoratoren werden oft in Ketten Organisiert
+
+(Dekorator 1) -> (Dekorator 2) -> (Dekorator 3) -> (Konkretes Objekt)
+
+> Wichtig ist, dass jeder Operator so behandelt werden kann wie das Objekt **Austauschbarkeit**
+
+Kein Referenzvergleich == mehr möglich 
+Gleichheit und Hashvalue müssen angepasst werden.
+
+> Das hat den Hintergrund da hier die Fragestellung aufkommt was wird verglichen (Das Originalobjekt oder die Decoration)
+
+Erzeugung von Decoratoren wird meist durch Factories implementiert
+
+Dekoratoren verdecken die Objekt-ID des ursprünglichen Objekts
+
+## Decorator vs Adapter
+
+Dekorator erweiter Funktionalität der Schnittstelle
+Adapter verbindet zwei nicht kompatible Schnittstellen (interface mix-in)
+
+## Proxy
+
+Stellvertreter Objekt um zu verhindern, dass ein direkter Zugriff auf ein Objekt entsteht
+
+Remote Proxy: Bsp. Remote Zugriff auf ein Objekt 
+
+P1  Netzwerk P2
+[] - () - []
+
+Um von P1 in Daten von P2 Zugriff zu bekommen baue ich einen Stellvertreter in P1 welcher auf die Objekte in P2 per Netzwerkrequest zugreifen kann
+
+>**Nicht Read-Only** Per Set Methode können die Daten in P2 auch bearbeitet werden
+>>Es geht also nur um den stellvertretenden Zugriff auf ein Fremdes Objekt ohne direkten Zugriff auf das Objekt zu haben.
+
+>(alt)RMI / (neu)REST
+
+## Adapter vs. Decorator vs. Proxy
+
+Adapter = Überbrückung zweier Schnittstellen
+Decorator = Erweitert Verhalten des ursprünglichen Objekts
+Proxy = Besitzt selbe Schnittstelle und zeigt selbes Verhalten wie das "abgeschirmte" Objekt
 
 
+## Bridge Pattern
+>*"Wenn sie Bridge Pattern hören denken sie immer an die golden gate Brigde, sie verbinden zwei Landzungen" => "Adapter für Klassenhierarchien"*
 
+>*"Sind nichts anderes als Treiber wie zum Beispiel JPA oder JDBC also ein Großer Adapter zwischen Abstraktion und bestimmten Implementierungen"*
+>>*"Schnittstelle auf der einen Seite mit einer großen Hierarchie wird adaptiert durch Implementierungen"*
 
+## Facade / Fassade
 
+>*"Man baut was schönes und verbirgt dahinter was anderes. Also man macht nach außen was schönen hin weil man nach innen was verbergen möchte"*
 
+Konkret Komplizierte Klassenkonstrukte die nach außen hin schön erreichbar gemacht werden soll => Schnittstelle
 
+### Vorteile
 
+Vereinfacht:
+- komplexes Domain Model
 
+- Austausch von Implementierungen
 
+### Nachteile
+- Mutieren oft zu Monsterklassen
+
+Facade = Keine Isolierung des Sub-Systems "Concevience Einstellung" => Soll idR. Zugriffe auf dahinterliegende Objekte zulassen
+
+## Composit 
+
+Verschachtelung => Bsp. Directory 
+
+Knoten kann wieder Knoten enthalten (Baum-Datenstruktur, Dateisystem)
 
 
 
