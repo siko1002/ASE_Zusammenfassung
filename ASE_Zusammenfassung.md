@@ -43,29 +43,6 @@ Die Verwendung von Patterns erhöht meist die Komplexität des Entwurfs bzw. der
 
 ---
 
-# Beispiel eines Patterns and der Template Methode
-Die Template Methode ist ein Basisbeispiel der Polymorhie [^1]. 
-Hier implementiert eine abstrakte Klasse Figur eine Methode um diese Figur zu zeichnen. Da jedoch alle Klassen die von Figur erben eigene Formen darstellen müssen diese unterschiedlich gezeichnet werden. Dafür wird die in Figur deklarierte draw-Methode in jeder erbenden Klasse konkret implementiert.
-
-<img src="Bilder/Template_Pattern.png" width=500>
-
-## Problem 1: Die konkrete Implementierung von draw() benötigt einen Zugriff auf den Farbwert
-
-### Lösung 1: Implementierung eines Farbattributes
-<img src="Bilder/Template_Pattern_Lösung_01.png" width=400>
-
-Hier ergibt sich der Nachteil, dass in jeder Implementierung von draw der prepare-Aufruf vergessen werden kann => **Komplexität wird erhöht**
-
-### Lösung 2: Implementierung einer getColor() Methode
-
-<img src="Bilder/Template_Pattern_Lösung_02.png" width=400>
-
-Die Oberklasse gesaltet hier den allgemeinen Ablauf des Zeichnens, beschreibt aber nicht das spezifische Zeichnen der einzelnen Figuren.
-- Durch die prepare() Methode, welche in der Oberklasse implementiert wird werden alle Parameter(Farbe) gesetzt, diese bleibt den Unterklassen verborgen.
-- doDraw() ist eine abstrakte Methode die von den Unterklassen überschrieben werden muss, hier wird die Logik für die spezifischen Figuren definiert.
-=> Simpel gesagt es wird nur die draw()-Methode der Oberklasse aufgerufen welche "versteckt" die abstrakte Methode doDraw() aufruft. Da doDraw() abstract ist muss jede Klasse die von Figur erbt diese für sich implementieren. Dadurch ist es möglich draw() immer aufzurufen, da bei Aufruf die Farbwerte von der Oberklasse gesetzt und die doDraw von der erbenden Klasse bereitgestellt wird.
-
-
 # Creational Patterns 
 Der Vorteil objektorientierter Sprachen sind Klassen und verwendung von Polymorphie (Bsp. abstrakte Schnittstellen)
 **Problem:** Polymorphie funktioniert nicht bei der Erzeugung von konkreten Objekten. Hier muss jedes mal Explizit der Typ angegeben werden.
@@ -271,6 +248,8 @@ Um von P1 in Daten von P2 Zugriff zu bekommen baue ich einen Stellvertreter in P
 
 >(alt)RMI / (neu)REST
 
+
+*"Transportiert die Schnittstelle wo anders hin. Schreiber/Leser merkt nicht, dass er mit dem Proxy kommuniziert"*
 ## Adapter vs. Decorator vs. Proxy
 
 Adapter = Überbrückung zweier Schnittstellen
@@ -283,6 +262,8 @@ Proxy = Besitzt selbe Schnittstelle und zeigt selbes Verhalten wie das "abgeschi
 
 >*"Sind nichts anderes als Treiber wie zum Beispiel JPA oder JDBC also ein Großer Adapter zwischen Abstraktion und bestimmten Implementierungen"*
 >>*"Schnittstelle auf der einen Seite mit einer großen Hierarchie wird adaptiert durch Implementierungen"*
+
+Beispiel dafür = JDBC Adapter
 
 ## Facade / Fassade
 
@@ -308,6 +289,137 @@ Verschachtelung => Bsp. Directory
 
 Knoten kann wieder Knoten enthalten (Baum-Datenstruktur, Dateisystem)
 
+
+# Behavioral Patterns
+
+Helfen das komplexe Verhalten von Software besser zu modellieren => erhöht Flexibilität der Software
+
+## Command
+
+Implementierung von Arbeitsanweisungen als Objekt anstatt als Methode
+
+>**IntUnaryOperator** = Damit können Lambdaausdrücke genutzt werden 
+```Java
+//Beispiel einfügen
+```
+
+### Erweiterungen
+#### Command Stack
+
+Bsp. Realisierung einer Undo Funktionalität
+> CommandStack wird wird dann per Strg+Z zurückabgearbeitet
+
+#### Command-Broker
+
+Es gibt einen Command Handler dieser sucht sich einen passenden 
+Commandhandler aus und übergibt diesem die Aufgabe
+
+In manchen Implementierungen übernimmt Commandbroker Aufgabe selbst
+In manchen übergibt er diese Aufgabe an einen Commandhandler
+
+Executoren entsprechen Execution-Brokers 
+
+=> Executor Service = Command Pattern
+## State Pattern
+
+Endlicher Automat (Einfach nur eine endliche Menge von Zuständen die halt bei Input wechseln)
+Beispiele für State Machines:
+- TCP = Wird als State Machine erzeugt
+- Digitaluhr
+
+>Prozedurale implementierungsvariante 
+>> Immer Aktueller Zustand => Ereignis => Bedingung (Folgezustand)
+>> Vorteil = Ablauforientiert "Das Bild (Zustandsautomat) verschwindet"
+
+Jedoch aufwendig wenn neuer Zustand rein kommt weil jede Verzweigung angepasst werden muss
+
+>Implementierungsart mit Zustandsklassen
+>> "Das Bild (Zustandsklassen) bleibt" => Man ist näher am Bild dran was es leichter/verständlicher macht
+
+> Implementierungsvariante als Graph
+>> Knoten und Kanten => Zustand hat mehrere Knoten für jedes Event
+>>> - Knoten = Zustandsübergänge
+>>> - Kanten = Zustände
+>> - Hier baut man dann die Struktur nach Also State a hat Übergang zu B, C, D
+>> - Bsp Web oder Webframework => Wenn ich auf Taste drücke geh ich da hin
+
+### Prodzedural oder Graph Implementierung
+
+Wenn man von außen was konfigurieren will nimmt man Graph Implementierung
+> Hier müssen erstmal die Grundlagen gemacht werden, Transitionsmodelle, etc.
+
+Wenn mein Code sich vermutlich nicht ändern soll nimmt man State Framework
+> Viel einfacher zu implementieren <br>
+> Wahrscheinlich viel Performanter
+
+
+## Template Method
+
+Die Template Methode ist ein Basisbeispiel der Polymorhie [^1]. 
+Hier implementiert eine abstrakte Klasse Figur eine Methode um diese Figur zu zeichnen. Da jedoch alle Klassen die von Figur erben eigene Formen darstellen müssen diese unterschiedlich gezeichnet werden. Dafür wird die in Figur deklarierte draw-Methode in jeder erbenden Klasse konkret implementiert.
+
+<img src="Bilder/Template_Pattern.png" width=500>
+
+## Problem 1: Die konkrete Implementierung von draw() benötigt einen Zugriff auf den Farbwert
+
+### Lösung 1: Implementierung eines Farbattributes
+<img src="Bilder/Template_Pattern_Lösung_01.png" width=400>
+
+Hier ergibt sich der Nachteil, dass in jeder Implementierung von draw der prepare-Aufruf vergessen werden kann => **Komplexität wird erhöht**
+
+### Lösung 2: Implementierung einer getColor() Methode
+
+<img src="Bilder/Template_Pattern_Lösung_02.png" width=400>
+
+Die Oberklasse gesaltet hier den allgemeinen Ablauf des Zeichnens, beschreibt aber nicht das spezifische Zeichnen der einzelnen Figuren.
+- Durch die prepare() Methode, welche in der Oberklasse implementiert wird werden alle Parameter(Farbe) gesetzt, diese bleibt den Unterklassen verborgen.
+- doDraw() ist eine abstrakte Methode die von den Unterklassen überschrieben werden muss, hier wird die Logik für die spezifischen Figuren definiert.
+=> Simpel gesagt es wird nur die draw()-Methode der Oberklasse aufgerufen welche "versteckt" die abstrakte Methode doDraw() aufruft. Da doDraw() abstract ist muss jede Klasse die von Figur erbt diese für sich implementieren. Dadurch ist es möglich draw() immer aufzurufen, da bei Aufruf die Farbwerte von der Oberklasse gesetzt und die doDraw von der erbenden Klasse bereitgestellt wird.
+
+> Beispiel aus der Vorlesung: Temperatursensor der sich immer wieder von Version zu Version verändert
+>> Lösung abstrakte Funktion getTemp() <br>
+>> Jeder Sensor implementiert getTemp() so wie er funktioniert. Dadurch kann jeder Sensor verwendet werden ohne bei Versionswechsel immer wieder den Code ändern zu müssen
+
+> Template Pattern basiert auf Polymorphie / Baut darauf auf
+
+## Strategy
+
+Erlaubt den Austausch/Konfiguration eines Algorithmus oder Verfahrens zu Laufzeit.
+Machbar wenn mehrere Algorithmen-Verfahren zur verfügung stehen.
+
+
+*"Wenn sie etwas sortieren wollen können sie den Sortieralgorithmus austauschen"*
+
+> Bsp Comparator => Anhand des Vergleichs bzw der Implementierung des Comparators ist die Logig verändert
+>> Man übergibt dem Sortieralgorithmus eine Strategie => Die Entscheidung wann etwas größer/kleiner ist wird verändert
+
+> Bsp 2. Baum-Beispiel
+>> Wie durch den Baum iteriert("Traversiert") wird kann anhand einer übergebenen Strategie festgelegt. => Man gibt einem Algorithmus eine Strategie mit und verändert dadurch die Logik/Ausführung
+
+
+## Observer
+"**Das wichtigste und komplizierteste Pattern**"
+
+"Ihr Code den sie lesen wird nicht in der Reihenfolge ausgeführt wie sie ihn lesen. Durch Callback Methoden die Aufgerufen werden wenn ein Event ausgelöst wird"
+
+Es gibt ein Observable 
+- register() => Dort registrieren sich die Listener "adListener"
+- deregister() => Deregisteirung
+- notify() => Läuft durch alle Observer und ruft dort eine Methode (meistens action() o.ä.) auf
+
+> ** Das Observer-Pattern dient der automatischen Weitergabe von Änderungen an einem Objekt an von diesem Objekt abhängige Strukturen **
+
+Man unterscheidet in drei Arten das Observer-Pattern umzusetzen
+
+- Push Notification
+    - Observer bekommt Nachricht es hat sich was geändert und muss aktiv nachfragen was/wie sich etwas geändert hat
+- Push Update
+    - Push Update => Da werden die geänderten Informationen mitgeschickt
+- Pull Notification
+    - Beobachter fragt selbstständig nach dem Zustand des Objektes
+
+> **"MCV Pattern ist Observer => View ist Observer von Model"**
+>> Model kennt View nicht dadurch sind die Views austauschbar
 
 
 
