@@ -196,10 +196,15 @@ Den Adapter gibt es in zwei Versionen(Objekt-Adapter / Klassen-Adapter)
 
 >Lollypop Schnittstelle -o )-
 
-Adapter werden verwendet um zwei Objekte/Schnittstellen miteinander kompatibel zu machen 
+Adapter werden verwendet um zwei nicht miteinander kompatible Objekte/Schnittstellen miteinander kompatibel zu machen.
 > []-o )-[]-o )-[]
 
 > **Kompatibilität zwischen Schnittstellen => Keine neue Funktionalität => Nur eine Delegation**
+### Objekt-Adapter
+<img src="Bilder/Adapter_Pattern_Verwendungsbeispiel.png" width=400>
+
+### Klassen-Adapter
+<img src="Bilder/Klassen_Adapter.png" width=400>
 
 ## Decorator
 
@@ -227,6 +232,8 @@ Erzeugung von Decoratoren wird meist durch Factories implementiert
 
 Dekoratoren verdecken die Objekt-ID des ursprünglichen Objekts
 
+<img src="Bilder/Decorator_Pattern.png" width=400>
+
 ## Decorator vs Adapter
 
 Dekorator erweiter Funktionalität der Schnittstelle
@@ -248,8 +255,10 @@ Um von P1 in Daten von P2 Zugriff zu bekommen baue ich einen Stellvertreter in P
 
 >(alt)RMI / (neu)REST
 
-
 *"Transportiert die Schnittstelle wo anders hin. Schreiber/Leser merkt nicht, dass er mit dem Proxy kommuniziert"*
+
+<img src="Bilder/Proxy_Pattern.png" width=400>
+
 ## Adapter vs. Decorator vs. Proxy
 
 Adapter = Überbrückung zweier Schnittstellen
@@ -260,16 +269,23 @@ Proxy = Besitzt selbe Schnittstelle und zeigt selbes Verhalten wie das "abgeschi
 ## Bridge Pattern
 >*"Wenn sie Bridge Pattern hören denken sie immer an die golden gate Brigde, sie verbinden zwei Landzungen" => "Adapter für Klassenhierarchien"*
 
+Das Bridge Pattern wird dafür verwendet größere Schnittstellen miteinander zu verbinden.
+
 >*"Sind nichts anderes als Treiber wie zum Beispiel JPA oder JDBC also ein Großer Adapter zwischen Abstraktion und bestimmten Implementierungen"*
 >>*"Schnittstelle auf der einen Seite mit einer großen Hierarchie wird adaptiert durch Implementierungen"*
 
-Beispiel dafür = JDBC Adapter
+<div style="display: flex; justify-content: space-around;">
+    <img src="Bilder/Bridge_Pattern_UML.png" width="400">
+    <img src="Bilder/Bridge_Pattern_Beispiel.png" width="400">
+</div>
 
 ## Facade / Fassade
 
 >*"Man baut was schönes und verbirgt dahinter was anderes. Also man macht nach außen was schönen hin weil man nach innen was verbergen möchte"*
 
 Konkret Komplizierte Klassenkonstrukte die nach außen hin schön erreichbar gemacht werden soll => Schnittstelle
+
+<img src="Bilder/Facade_Pattern.png" width=600>
 
 ### Vorteile
 
@@ -281,13 +297,18 @@ Vereinfacht:
 ### Nachteile
 - Mutieren oft zu Monsterklassen
 
-Facade = Keine Isolierung des Sub-Systems "Concevience Einstellung" => Soll idR. Zugriffe auf dahinterliegende Objekte zulassen
+Facade = Keine Isolierung des Sub-Systems "Concevience Einstellung" => Soll idR. Zugriffe auf dahinterliegende Objekte zulassen und erleichtern
+> Einfache Zugriffsschnittstelle für komplexere Aufrufe
 
 ## Composit 
 
-Verschachtelung => Bsp. Directory 
+Composite-Pattern = hierarschicher Aufbau einer Datenstruktur (Repräsentation einer Teil-Ganzes-Hierarchie)
 
-Knoten kann wieder Knoten enthalten (Baum-Datenstruktur, Dateisystem)
+**Einsatzzweck:**
+- Aufbau einer flexiblen hierarchischen Struktur, deren Gestalt sich ändern kann
+- Bestandteile können einheitlich behandelt werden, da sie einen algemeinen Typ repräsentieren
+
+> **Knoten kann wieder Knoten enthalten Bsp. Baum-Datenstruktur, Dateisystem**
 
 
 # Behavioral Patterns
@@ -296,18 +317,33 @@ Helfen das komplexe Verhalten von Software besser zu modellieren => erhöht Flex
 
 ## Command
 
-Implementierung von Arbeitsanweisungen als Objekt anstatt als Methode
+Implementierung von Arbeitsanweisungen als Objekt anstatt als Methode. Wenn es also eine abstrakte Klasse Command gibt die eine Methode execute() vorgibt können alle erstellten Commands übergeben werden. Meistens gibt es einen Invoker, welcher den Befehl ausführt und einen Receiver welcher die Arbeit "verrichtet".
 
 >**IntUnaryOperator** = Damit können Lambdaausdrücke genutzt werden 
 ```Java
-//Beispiel einfügen
+public static void main(String[] args)
+{
+    System.out.println("Summe " + sum(0,10, i -> i) );
+    System.out.println("Summe Quadratzahlen " + sum(0,10, i -> i*i) );
+}
+private static int sum(int start, int end, IntUnaryOperator function)
+{
+    int sum = 0;
+    for(int i=start; i < end; i++)
+    {
+        sum += function.applyAsInt(i);
+    }
+    return sum;
+}
 ```
 
 ### Erweiterungen
 #### Command Stack
 
 Bsp. Realisierung einer Undo Funktionalität
-> CommandStack wird wird dann per Strg+Z zurückabgearbeitet
+> Im Kontext von Tastatureingaben würde der CommandStack per undo dann per Strg+Z zurückabgearbeitet
+
+<img src="Bilder/Command_Stack.png" width=400>
 
 #### Command-Broker
 
@@ -318,8 +354,10 @@ In manchen Implementierungen übernimmt Commandbroker Aufgabe selbst
 In manchen übergibt er diese Aufgabe an einen Commandhandler
 
 Executoren entsprechen Execution-Brokers 
-
 => Executor Service = Command Pattern
+
+<img src="Bilder/Command_Broker.png" width=400>
+
 ## State Pattern
 
 Endlicher Automat (Einfach nur eine endliche Menge von Zuständen die halt bei Input wechseln)
@@ -327,14 +365,33 @@ Beispiele für State Machines:
 - TCP = Wird als State Machine erzeugt
 - Digitaluhr
 
->Prozedurale implementierungsvariante 
->> Immer Aktueller Zustand => Ereignis => Bedingung (Folgezustand)
->> Vorteil = Ablauforientiert "Das Bild (Zustandsautomat) verschwindet"
+### Prozedurale implementierungsvariante 
+> Aktueller Zustand => Ereignis => Bedingung/Folgezustand
+<img src="Bilder/State_Pattern_Prozendural_Beispielbild.png" width=400>
 
-Jedoch aufwendig wenn neuer Zustand rein kommt weil jede Verzweigung angepasst werden muss
+Vorteil = Ablauforientiert "Das Bild (der Zustandsautomat) verschwindet"
+```Java
+while (index < eventSequenz.length()) {
+    char event = eventSequenz.charAt(index);
+    switch (state) {
+        case "Q1":
+            switch (event) {
+                case 'a': state = "Q2"; break;
+                case 'b': state = "Q1"; break;
+                default: System.err.println("Falsches Event");
+            }
+        break;
+        case "Q2":
+            …..
+        case "Q3":
+            …..
+        default: System.err.println("Falscher Zustand");
+    }
+```
+Dieser Ansatz ist jedoch Zeitaufwendig, da jede Verzweigung angepasst werden muss, sobald ein neuer Zustand dazu kommt.
 
->Implementierungsart mit Zustandsklassen
->> "Das Bild (Zustandsklassen) bleibt" => Man ist näher am Bild dran was es leichter/verständlicher macht
+### Implementierungsart mit Zustandsklassen
+> "Das Bild (Zustandsklassen) bleibt" => Man ist näher am Bild dran was es leichter/verständlicher macht
 
 > Implementierungsvariante als Graph
 >> Knoten und Kanten => Zustand hat mehrere Knoten für jedes Event
@@ -343,15 +400,31 @@ Jedoch aufwendig wenn neuer Zustand rein kommt weil jede Verzweigung angepasst w
 >> - Hier baut man dann die Struktur nach Also State a hat Übergang zu B, C, D
 >> - Bsp Web oder Webframework => Wenn ich auf Taste drücke geh ich da hin
 
-### Prodzedural oder Graph Implementierung
+<img src="Bilder/State_Pattern_Zustandsklassen.png" width=500>
 
-Wenn man von außen was konfigurieren will nimmt man Graph Implementierung
+```Java
+public class Q1 extends Zustand
+{
+    @Override
+    public Zustand processEventA() { return new Q2(); }
+    @Override
+    public Zustand processEventB() { return this; }
+}
+public static void main(String[] args)
+{
+    Zustand state = new Q1();
+    state = state.processEventA().processEventB().processEventA();
+    System.out.println( state.getClass().getSimpleName() );
+}
+```
+
+### Graph Implementierung
+
+
+<img src="Bilder/State_Pattern_Graph_Implementierung.png" width=400>
+
+Wenn man von außen Parameter konfigurieren will nimmt man die Graph Implementierung
 > Hier müssen erstmal die Grundlagen gemacht werden, Transitionsmodelle, etc.
-
-Wenn mein Code sich vermutlich nicht ändern soll nimmt man State Framework
-> Viel einfacher zu implementieren <br>
-> Wahrscheinlich viel Performanter
-
 
 ## Template Method
 
@@ -387,15 +460,14 @@ Die Oberklasse gesaltet hier den allgemeinen Ablauf des Zeichnens, beschreibt ab
 Erlaubt den Austausch/Konfiguration eines Algorithmus oder Verfahrens zu Laufzeit.
 Machbar wenn mehrere Algorithmen-Verfahren zur verfügung stehen.
 
-
 *"Wenn sie etwas sortieren wollen können sie den Sortieralgorithmus austauschen"*
 
-> Bsp Comparator => Anhand des Vergleichs bzw der Implementierung des Comparators ist die Logig verändert
->> Man übergibt dem Sortieralgorithmus eine Strategie => Die Entscheidung wann etwas größer/kleiner ist wird verändert
+1. Bsp Comparator => Anhand des Vergleichs bzw der Implementierung des Comparators ist die Logig verändert
+    - Man übergibt dem Sortieralgorithmus eine Strategie => Die Entscheidung wann etwas größer/kleiner ist wird verändert
+2. Bsp. Baum-Beispiel
+    - Wie durch den Baum iteriert("Traversiert") wird kann anhand einer übergebenen Strategie festgelegt. => Man gibt einem Algorithmus eine Strategie mit und verändert dadurch die Logik/Ausführung
 
-> Bsp 2. Baum-Beispiel
->> Wie durch den Baum iteriert("Traversiert") wird kann anhand einer übergebenen Strategie festgelegt. => Man gibt einem Algorithmus eine Strategie mit und verändert dadurch die Logik/Ausführung
-
+<img src="Bilder/Strategy_Pattern.png" width=400>
 
 ## Observer
 "**Das wichtigste und komplizierteste Pattern**"
@@ -407,14 +479,14 @@ Es gibt ein Observable
 - deregister() => Deregisteirung
 - notify() => Läuft durch alle Observer und ruft dort eine Methode (meistens action() o.ä.) auf
 
-> ** Das Observer-Pattern dient der automatischen Weitergabe von Änderungen an einem Objekt an von diesem Objekt abhängige Strukturen **
+> **Das Observer-Pattern dient der automatischen Weitergabe von Änderungen an einem Objekt an von diesem Objekt abhängige Strukturen**
 
 Man unterscheidet in drei Arten das Observer-Pattern umzusetzen
 
 - Push Notification
     - Observer bekommt Nachricht es hat sich was geändert und muss aktiv nachfragen was/wie sich etwas geändert hat
 - Push Update
-    - Push Update => Da werden die geänderten Informationen mitgeschickt
+    - Push Update => Die geänderten Informationen werden mitgeschickt
 - Pull Notification
     - Beobachter fragt selbstständig nach dem Zustand des Objektes
 
