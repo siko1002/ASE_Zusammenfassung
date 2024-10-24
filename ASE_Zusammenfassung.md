@@ -492,67 +492,180 @@ Man unterscheidet in drei Arten das Observer-Pattern umzusetzen
 
 > **"MCV Pattern ist Observer => View ist Observer von Model"**
 >> Model kennt View nicht dadurch sind die Views austauschbar
+>> Dadurch lose kopplung
+
+Controller = Zuständig für Eingaben
+
+Lambdas = Kurzschreibweise um Interfaces mit nur einer Funktionalität aufzurufen
+```Java
+public interface TickerStateChangeListener {
+    public void StateHasChanged();
+}
+
+//Dieser Aufruf ist dasselbe wie
+this.ticker.registerStateChangeListener(new TickerStateChangeListener() {
+            @Override
+            public void StateHasChanged() {
+                setDisplay(ticker.getValue());
+            }
+        });
+
+// dieser Aufruf
+this.ticker.registerStateChangeListener(() -> setDisplay(ticker.getValue()));
+```
+
+---
+
+# Design Prinzipien
+
+## SOLID
+
+S = Single Responsibility Only
+
+O = Open-Closed Prinzip
+
+L = Liskovsches Substitutionsprinzip
+
+I = Interface Segregation Prinzip
+
+D = Dependency Inversion Prinzip
+
+**Wenn jemand im Bewerbungsgesrpäch fragt muss man wissen, dass es ein Akronym ist und für Designprinzipien steht. Noch bessern wenn man diese Kennt**
+
+### SPR: Single Responsibility Principle
+- "Für was ist was zuständig"
+- Eine Klasse/Funktion hat nur eine Funktionalität
+
+"Es sollte nie mehr als einen Grund dafür geben, eine Klasse zu ändern"
+=> Vermeidung von Seiteneffekten
+
+Kann auf Klassen-, Methoden- und Komponentenebene angewendet werden.
+### OPC = Open Closed Principle
+
+- "Wie baue ich meine Software offen für Erweiterungen aber geschlossen für Veärnderungen"
+- Open -> Erweiterung 
+- Closed -> Veärnderungen
+    -  Die Erweiterungen sollen die Klasse nicht kaputt machen
+
+Änderungen sollten Lokal bleiben und keine Seiteneffekte haben.
+Wenn ein starres Design vorliegt kann eine Änderung zu einer Kaskade von Änderungen führen.
+
+> In Beispiel 2 Liegt das Interface Sortierbar im model.util, da es zu dem Sortierer gehört. Wenn die Klassen den Sortierer nutzen wollen müssen sie auch das Interface unter dessen Hoheit implementieren.
+
+### Liskovsches Substitutionsprinzip
+- "Leitlinie für Vererbung"
+- Unterklassen müssen immer Oberklassen substituieren können
+
+Vererbung bedeutet Substituierbarkeit und sollte nicht als eine ist-ein Beziehung interpretiert werden.
+### ISP = Interface Segregation Principle
+"Clients sollten nicht gezwungen sein von Interfaces abzuhängen, die sie nicht verwenden"
+
+**Unnötige Interfaceverkettungen vermeiden!**
+
+>Machen sie kleine Interfaces => Interfaces sollten immer eine Rolle haben, welches das Objekt spielen kann
+
+### DIP = Dependency Inversion Principle
+"Module hoher Ebenen sollten nicht von Modulen niedrigerer Ebenen abhängen. Beide sollten von Abstraktionen abhängen."
+
+"Abstraktionen sollten nicht von Details abhängen => Details sollten von Abstraktionen abhängen!"
+
+"Abhängigkeiten umdrehen um Flexibilität dadurch zu gewinnen"
+
+- **Ganz wichtig!**
+
+Beispiel für dieses Principle = Abstract Factory
+=> Iterator weiß welche Datenstruktur vorliegt und kann passend zur Datenstruktur einen Iterator auswählen
+
+
+## API-Design
+
+
+## Weitere Konzepte
+DRY = Dont Repeat Yourself
+
+Ziel Redundanz vermeiden und Funktionalität zentralisieren
+Vorsicht: Kann Abhängigkeiten einführen
+
+YAGNI = You Aren´t Gonna Need It
+
+Unnötiges weglassen => Erst implementieren wenn es benötigt wird 
+
+KISS = Keep It Simple And State_Pattern_Prozendural_Beispielbild
+
+
+
+
+# Verteilte Systeme
+
+Verteiltes System = Zusmmenschluss unabhängiger Computer, die sich für den Benutzer als ein einziges System präsentieren.
+
+- Client-Server-System
+- Verteilte Anwendung
+- Verteiltes Betriebssystem
+## Schichtenarchitektur
+- Graphische Präsentation (Benutzeroberfläche)
+- Benutzungsinterface (Interaktionssteuerung)
+- Datenverarbeitung (Business-Logic)
+- DBMS = Datenbankmanagementsystem
+    - Datenmanagement
+    - Daten
+> Verstecken von Komplexität nach unten (Obere Schichten können nur auf Schicht untendrunter zugreifen (z.B. durch Observer) )
+
+## Monolitische Systeme
+
+
+1. Standalone-Systeme = Alles auf einem Rechner
+2. Komplette Anwendung läuft zentral auf einem Server
+    - Interaktive Benutzung nur über "dumme" Terminals
+3. Client/Server-Systeme
+    - Bsp. Fileserver, Datenbank-Server, Workflow-Engines
+
+4. Varianten des Two-Tier-Models
+    - Logik auf dem Client
+    - Logik in der Datenbank (Stored Procedures)
+    - Logik und Anwendungssteuerung innerhalb des DBMS
+
+## Klassische Two-Tier Architektur
+Client -> DB-Server
+
+Vorteile
+- Einfaches Programmiermodell
+- Applikationslogik liegt hauptsächlich auf dem Client
+Nachteile
+- Hohe Anforderungen an die Client-Rechner (hohe Kosten)
+- Nicht unbegrenzt skalierbar
+- Softwareverteilungsproblem: Client-Versionen müssen alle synchron gehalten werden
+
+## Three-Tier / n-Tier Architekturen
+Hier spricht man dann auch von verteilten Anwendungen / verteilte Architekturen
+
+Aufteilung in DB, Logik und Presentation
+> So funktionieren die meisten Webseiten
+
+Verteilung kann sowohl Vertikal, Horizontal als auch in beiden Dimensionen erfolgen.
+
+Vertikale Verteilung = Schichten liegen auf unterschiedlichen Rechnern
+
+## Middelware
+
+Middelware = Nutzbare API um technische Details nicht mehr verwenden zu müssen
+
+## Kommunikationsarten
+Synchron / Asynchron
+One-to-One / One-to-Many
+
+### Asynchrone Kommunikation 
+
+Queuing-System
 
 
 
 
 
+# Wahrscheinlich nicht Prüfungsrelevant aber interessant
+API-Gateway = Früher. Session Dispatcher => Verteilt API-Anfragen auf die verteilten Backend-Dienste.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Idempotent = Mehrfachauslieferung macht keine Probleme
 
 
 
