@@ -532,7 +532,7 @@ D = Dependency Inversion Prinzip
 
 **Wenn jemand im Bewerbungsgesrpäch fragt muss man wissen, dass es ein Akronym ist und für Designprinzipien steht. Noch bessern wenn man diese Kennt**
 
-### SPR: Single Responsibility Principle
+### SRP: Single Responsibility Principle
 - "Für was ist was zuständig"
 - Eine Klasse/Funktion hat nur eine Funktionalität
 
@@ -540,60 +540,117 @@ D = Dependency Inversion Prinzip
 => Vermeidung von Seiteneffekten
 
 Kann auf Klassen-, Methoden- und Komponentenebene angewendet werden.
-### OPC = Open Closed Principle
 
-- "Wie baue ich meine Software offen für Erweiterungen aber geschlossen für Veärnderungen"
-- Open -> Erweiterung 
-- Closed -> Veärnderungen
-    -  Die Erweiterungen sollen die Klasse nicht kaputt machen
+> Dies ist wichtig, da wenn eine Klasse mehr als eine Zuständigkeit hat, dann werden auch diese welche bei der Nutzung dieser Klasse nicht benötigt werden implizit gekoppelt. Wenn nun eine dieser Zuständigkeiten verändert wird kann die Zuständigkeit der anderen beeinträchtigt oder behindert werden.
+
+<div style="display: flex; justify-content: space-around;">
+<img src="Bilder/SRP_Beispiel_Bevor.png" width=400>
+<div width=40><p>=></div>
+<img src="Bilder/SRP_Beispiel_Danach.png" width=400>
+</div>
+
+<br/>
+Auf Komponentenebene wird SRP zum Common-Closure-Prinzip
+
+Auf Architekturebene wird SRP zum Axis-of-Change-Modell
+
+### OCP = Open Closed Principle
+
+"Wie baue ich meine Software offen für Erweiterungen aber geschlossen für Veärnderungen"
+
+**Open -> Erweiterung**
+Das Verhalten eines Moduls bzw. einer Klasse soll erweitert werden können, wenn sich die Anforderungen der Anwendung ändern.
+**Closed -> Veärnderungen**
+Das Erweitern des Verhalten eines Moduls bzw. einer Klasse soll keine Änderungen am bestehenden Quellcode des Moduls beinhalten => Die ausführbare Version des Moduls/der Bibliothek bleibt unangetastet
+> Die Erweiterungen sollen die Klasse nicht kaputt machen.
 
 Änderungen sollten Lokal bleiben und keine Seiteneffekte haben.
 Wenn ein starres Design vorliegt kann eine Änderung zu einer Kaskade von Änderungen führen.
 
+<div style="display: flex; justify-content: space-around;"> 
+<img src="Bilder/OCP_Beispiel_Davor.png" width=400>
+<div width=10><p>=></p></div>
+<img src="Bilder/OCP_Beispiel_Danach.png" width = 400>
+</div>
 > In Beispiel 2 Liegt das Interface Sortierbar im model.util, da es zu dem Sortierer gehört. Wenn die Klassen den Sortierer nutzen wollen müssen sie auch das Interface unter dessen Hoheit implementieren.
+
+Zielsetzung ist es, das System so zu gestalten, dass es leicht erweiterbar ist, ohne einen zu hohen Einfluss durch Modifikatoren zuzulassen.
+Wird erreicht durch:
+- Unterteilung des Systems in Komponenten
+- Anordnung der Komponenten in einer Abhängigkeitshierarchie
+- Komponenten niedrigerer Ebenen durch Änderungen von Komponenten höherer Hierarchien schützen
 
 ### Liskovsches Substitutionsprinzip
 - "Leitlinie für Vererbung"
 - Unterklassen müssen immer Oberklassen substituieren können
 
 Vererbung bedeutet Substituierbarkeit und sollte nicht als eine ist-ein Beziehung interpretiert werden.
+
+> Untergeordnete Klassen einer Vererbungshierarchie können die überliegenden vollständig ersetzen
 ### ISP = Interface Segregation Principle
 "Clients sollten nicht gezwungen sein von Interfaces abzuhängen, die sie nicht verwenden"
 
-**Unnötige Interfaceverkettungen vermeiden!**
+**Unnötige Interfaceverkettungen oder große/riesige Interfaces vermeiden!**
 
 >Machen sie kleine Interfaces => Interfaces sollten immer eine Rolle haben, welches das Objekt spielen kann
 
+Simpel heruntergebrochen soll vermieden werden, dass eine Klasse ein großes Interface mit zu vielen Eigenschaften implementieren muss obwohl nur eine Eigenschaft dieses Interface implementiert werden soll.
+Lösung = Implementierung mehrerer kleiner Interfaces die jeweils nur eine Eigenschaft verkörpern so, dass eine Klasse nur das implementiert was sie auch braucht.
+
 ### DIP = Dependency Inversion Principle
+**Ganz wichtig!**
 "Module hoher Ebenen sollten nicht von Modulen niedrigerer Ebenen abhängen. Beide sollten von Abstraktionen abhängen."
-
 "Abstraktionen sollten nicht von Details abhängen => Details sollten von Abstraktionen abhängen!"
-
-"Abhängigkeiten umdrehen um Flexibilität dadurch zu gewinnen"
-
-- **Ganz wichtig!**
 
 Beispiel für dieses Principle = Abstract Factory
 => Iterator weiß welche Datenstruktur vorliegt und kann passend zur Datenstruktur einen Iterator auswählen
 
+DIP besagt, dass Systeme, in welchen sich Quellcode-Abhängigkeiten ausschließlich auf Abstraktionen beziehen anstatt auf konkrete Realisierungen, am flexibelsten sind.
+=> "High-Level"(Layer) sollen nicht von "Low-Level"(konkrete Implementierungen) abhängig sein
+
+> Dieses Prinzip uist nicht durchzuhalten! => Abhängigkeiten von stabilem konkreten Code sind erlaubt.
 
 ## API-Design
+Benutzbarkeit = Leicht verstädnlich und erlernbar sein
+Effizienz = geringe Übertragung von Datenvolumen
+Zuverlässigkeit = Wie wird mit Fehlern umgegangen? => **Ein Fehler bei Verwendung sollte nicht in einem Absturz resultieren!**
 
+**Wichtig:**
+- Konsistenz = Durchgängige Namensgebung
+- Verständlichkeit = Konventionen
+    - Getter und Setter sollten auch so benannt sein (getId(), setId(int id))
+- Eine gute API sollte schwer falsch zu benutzen sein!
+    - Eine gute API sollte nicht nur einfach zu benutzen sein, sondern auch schwer sein sie falsch zu verwenden
+- Leaking References vermeiden
+    - Eine API sollte keine Referenzen zurückgeben (modifizierbare Interna)
+    - Wenn eine beispielsweise eine Liste zurückgegeben wird sollte entweder eine Kopie dieser zurückgegeben werden oder eine unmodifizierbare Version.
+- Keine null Rückgaben!
+    - Lieber ein eigenen Typ/Fehler zurückgeben als stumpf null
 
 ## Weitere Konzepte
-DRY = Dont Repeat Yourself
 
+### DRY = Dont Repeat Yourself
 Ziel Redundanz vermeiden und Funktionalität zentralisieren
-Vorsicht: Kann Abhängigkeiten einführen
 
-YAGNI = You Aren´t Gonna Need It
+<img src="Bilder/DRY_Beispiel.png" width=600>
+
+**Vorsicht: Kann Abhängigkeiten einführen**
+
+### YAGNI = You Aren´t Gonna Need It
 
 Unnötiges weglassen => Erst implementieren wenn es benötigt wird 
 
-KISS = Keep It Simple And State_Pattern_Prozendural_Beispielbild
+### KISS = Keep It Simple And State_Pattern_Prozendural_Beispielbild
 
+Einfachheit ist eine erforderliche Eigenschaft von Softwaresysteme
+- Gilt für Gestaltung und Implementierung
 
+Wenn Software kompliziertet ist als sie sein muss sinkte ihre Qualität
 
+=> höhere Komplexität verringert Wartbarkeit, behindert Wiederverwendbarkeit und kann zu Zunahme der Anzahl von Fehlern führen.
+
+## Fazit von Design Prinzipien
+Die Anwendung der Prinzipien führt nicht automatisch zu besserer Software. Meistens landet man bei "es kommt darauf an!" abhängig von dem jeweiligen Fall.
 
 # Verteilte Systeme
 
