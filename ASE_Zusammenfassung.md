@@ -640,7 +640,7 @@ Ziel Redundanz vermeiden und Funktionalität zentralisieren
 
 Unnötiges weglassen => Erst implementieren wenn es benötigt wird 
 
-### KISS = Keep It Simple And State_Pattern_Prozendural_Beispielbild
+### KISS = Keep It Simple And Stupid
 
 Einfachheit ist eine erforderliche Eigenschaft von Softwaresysteme
 - Gilt für Gestaltung und Implementierung
@@ -655,65 +655,142 @@ Die Anwendung der Prinzipien führt nicht automatisch zu besserer Software. Meis
 # Verteilte Systeme
 
 Verteiltes System = Zusmmenschluss unabhängiger Computer, die sich für den Benutzer als ein einziges System präsentieren.
+- Menge interagierender Prozesse (oder Prozessoren), welche über keinen gemeinsamen Speicher verfügen und daher mit Nachrichten miteinander kommunizieren.
 
-- Client-Server-System
-- Verteilte Anwendung
-- Verteiltes Betriebssystem
+## Client-Server-System
+Viele Clients greifen auf einen oder mehrere Server zu.
+
+## Verteilte Anwendung
+Durch die Programmierung der Anwendung wir das verteilte System erstellt.
+
+## Verteiltes Betriebssystem
+Das Betriebssystem selbst ist verteilt, für Benutzer und Anwendungen ist dies nicht sichtbar.
+
 ## Schichtenarchitektur
+
 - Graphische Präsentation (Benutzeroberfläche)
 - Benutzungsinterface (Interaktionssteuerung)
 - Datenverarbeitung (Business-Logic)
 - DBMS = Datenbankmanagementsystem
     - Datenmanagement
     - Daten
+
+<img src="Bilder/Softwareschichten_einer_Anwendung.png" width=400>
+
 > Verstecken von Komplexität nach unten (Obere Schichten können nur auf Schicht untendrunter zugreifen (z.B. durch Observer) )
 
 ## Monolitische Systeme
 
 
-1. Standalone-Systeme = Alles auf einem Rechner
-2. Komplette Anwendung läuft zentral auf einem Server
-    - Interaktive Benutzung nur über "dumme" Terminals
-3. Client/Server-Systeme
-    - Bsp. Fileserver, Datenbank-Server, Workflow-Engines
+### Standalone-Systeme = Alles auf einem Rechner
 
-4. Varianten des Two-Tier-Models
-    - Logik auf dem Client
-    - Logik in der Datenbank (Stored Procedures)
-    - Logik und Anwendungssteuerung innerhalb des DBMS
+<img src="Bilder/Monolith_Standalone.png" width=300>
+
+### Komplette Anwendung läuft zentral auf einem Server
+Interaktive Benutzung nur über "dumme" Terminals
+<img src="Bilder/Monolith_zentral_auf_Server.png" width=300>
+
+## Client/Server-Systeme
+
+Leistungsfähige PCs ermöglichen Ausführung auf Nutzerrechnern
+- Bsp. Fileserver, Datenbank-Server, Workflow-Engines
+
+<img src="Bilder/Client_Server_Architekturen.png" width=400>
+
+1. Logik auf Client
+2. Logik in der Datenbank (Stored Procedures)
+3. Logik und Anwendungssteuerung innerhalb des DBMS
 
 ## Klassische Two-Tier Architektur
-Client -> DB-Server
+
+<img src="Bilder/Klassische_two_tier_Architektur.png" width=400>
 
 Vorteile
 - Einfaches Programmiermodell
 - Applikationslogik liegt hauptsächlich auf dem Client
+
 Nachteile
 - Hohe Anforderungen an die Client-Rechner (hohe Kosten)
 - Nicht unbegrenzt skalierbar
 - Softwareverteilungsproblem: Client-Versionen müssen alle synchron gehalten werden
 
-## Three-Tier / n-Tier Architekturen
-Hier spricht man dann auch von verteilten Anwendungen / verteilte Architekturen
+## Verteilte-Anwendungen / Three-Tier / n-Tier Architekturen
 
-Aufteilung in DB, Logik und Presentation
-> So funktionieren die meisten Webseiten
+<img src="Bilder/Verteilte_Anwendungen.png" width=400>
 
+Verteilung bedeutet einfach nur, dass das Programm auf diverse Rechner verteilt wird.
 Verteilung kann sowohl Vertikal, Horizontal als auch in beiden Dimensionen erfolgen.
 
 Vertikale Verteilung = Schichten liegen auf unterschiedlichen Rechnern
+Horizontale Verteilung = Anzahl der Schichten
+<img src="Bilder/Horizontal_Vertikal_verteiltes_System.png" width=400>
+
+Aufteilung in DB, Logik(Backend) und Presentation(Frontend)
+> So funktionieren die meisten Webseiten/Systeme
+<img src="Bilder/Klassische_three_tier_Architektur.png" width=400> 
+
 
 ## Middelware
 
-Middelware = Nutzbare API um technische Details nicht mehr verwenden zu müssen
+Die Middleware liegt zwischen den Betriebssystemen (OS) der Rechner (Rechner A, B, C) und der verteilten Anwendung. Sie bietet Middleware-Services, die die Kommunikation und Koordination zwischen verschiedenen Rechnern in einem verteilten System ermöglichen.
+
+- Namensdienst
+- Kommunikationsdienst
+- Filedienst
+- Zeitdienst
+- Konkurrenzdienst
+- Transaktionsdienst
+- Sicherheitsdienst
+
+Zusammengefasst bieten Middleware-Services die Infrastruktur, die die Entwicklung und den Betrieb verteilter Anwendungen durch Standardfunktionen vereinfacht.
+
+>Die Middleware kapselt die Anwendung von den benutzten Protokollschichten
+<img src="Bilder/Middleware_OSI.png" width=300>
 
 ## Kommunikationsarten
-Synchron / Asynchron
-One-to-One / One-to-Many
+<table>
+<th>Synchron</th>
+<th>Asynchron</th>
+<tr>
+<td>http, REST</td>
+<td>fetch(JavaScript), JMS(Messaging)</td>
+</tr>
+</table>
+
+
+<table>
+<th>One-to-One</th>
+<th>One-to-Many</th>
+<tr>
+<td>http, Rest, fetch, JMS mit Queues</td>
+<td>Eventauslieferung beim Observer, JMS mit Topics</td>
+</tr>
+</table>
+
+### Synchrone Kommunikation
+
+<img src="Bilder/Synchrone_Kommunikation.png" width=400>
 
 ### Asynchrone Kommunikation 
 
-Queuing-System
+<img src="Bilder/Asynchrone_Kommunikation.png" width=400>
+
+
+### Kommunikationsfehler
+
+Mögliche Fehler:
+- Request geht verloren oder wird verzögert
+- Response geht verloren oder wird verzögert
+- Client oder Server sind zwischenzeitlich nicht verfügbar
+
+> Hier ist wichtig wie damit umgegangen wird. Wird ein Request erneut gesendet, wie lange wartet man auf die Antwort, etc.
+
+
+
+
+
+
+
 
 
 
