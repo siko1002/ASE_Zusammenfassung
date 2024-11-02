@@ -687,7 +687,9 @@ Das Betriebssystem selbst ist verteilt, für Benutzer und Anwendungen ist dies n
 <img src="Bilder/Monolith_Standalone.png" width=300>
 
 ### Komplette Anwendung läuft zentral auf einem Server
+
 Interaktive Benutzung nur über "dumme" Terminals
+
 <img src="Bilder/Monolith_zentral_auf_Server.png" width=300>
 
 ## Client/Server-Systeme
@@ -785,8 +787,29 @@ Mögliche Fehler:
 
 > Hier ist wichtig wie damit umgegangen wird. Wird ein Request erneut gesendet, wie lange wartet man auf die Antwort, etc.
 
+## RMI (Remote Method Invocation)
+
+Java-Mechanismus zur Realisierung der Interprozesskommunikation
+
+Mit Hilfe von RMI können Methoden entfernter Objekte aufgerufen werden
+> Ziel: Aufruf sollte dabei möglichst transparent sein
+
+### Architektur von RMI
+
+Server = Dienstanbieter
+Client = Dienstnehmer
+
+(Bild einfügen)
+
+Server muss in Middleware-Schichte verankert werden.
 
 
+Verankerung des Servers in der Mittleware (RMI-Mechanismus) 
+erfolgt über Vererbungskonventionen
+> Marker Interface => Makiert, dass Klasse öffentlich zugänglich gemacht werden kann
+
+>Naming Service = RMI Registry
+>> Name, Remotereferenz
 
 
 
