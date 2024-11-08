@@ -789,6 +789,9 @@ Mögliche Fehler:
 
 ## RMI (Remote Method Invocation)
 
+>**RMI nutzt Proxy Pattern**
+>>Stub und Skeleton Repräsentieren die Platzhalter => Proxy
+
 Java-Mechanismus zur Realisierung der Interprozesskommunikation
 
 Mit Hilfe von RMI können Methoden entfernter Objekte aufgerufen werden
@@ -811,19 +814,87 @@ erfolgt über Vererbungskonventionen
 >Naming Service = RMI Registry
 >> Name, Remotereferenz
 
+### Codebeispiel: Server 
+
+ExportObjekt => Erzeugt Skeleton und macht Sockel auf
+LocateRegistry.getRegistry() => Sucht Naming Service (falls dieser nicht läuft Startet dieser).
+Konvention Protokoll vorne anfügen (Bsp. "rmi://Hallo" und nicht "//Hallo")
+
+rebind() überschreibt falls es den Aufruf schon gibt
+bind() versucht Aufruf zu setzen und wirft Fehler, falls schon belegt
+
+### Codebeispiel: Client
+LocateRegistry.getRegistry() => Sucht Naming Service
+registry.lookup("rmi://Hello"); => Ruft Hello von Remote Objekt auf
+
+### Reihenfolge der Ausführung
+- Starten der rmiregistry (in Shell)
+    - rmiregistry repräsentiert Naming-Service
+    - Remote-Interfaces müssen im rmiregistry-Classpath stehen
+    - Am einfachsten startet man die rmiregistry im "Serververzeichnis"
+- Starten des Servers (in Shell)
+- Starten des Clients (in Shell)
+    
+
+### Middleware bei RMI
+- Stub = Proxy => Macht Netzerkrequest 
+- Skeleton = Socketlistener = Nimmt Netzwerkrequest entgegen und verwaltet das Serverobjekt
+
+Mittleware = Vermittlungsschnittstelle welche möglichst transparent weggekapselt werden soll.
 
 
+Wichtig ist, dass man bei RMI bei mehreren Parallelen Zugriffen auf den Server direkt im Multithreading ist und damit Concurrency Konflikte vermeiden muss!!!
+**Nebenläufige Programmierung**
 
 
+Remote Aufruf = Call by Value => Es werden Kopien des Objekts erzeugt
+
+Request-Response Muster= Client stellt Request, Server reagiert darauf (Response)
+
+RMI = Synchrones Request - Response Muster
+Client stellt Anfrage und wartet auf Antwort
+Server kann nicht aktiv Client benachrichtigen
+
+**Workaround: Callback Design Pattern** 
+### Callback Design
+Client stellt auch Remote-Objekt zu Verfügung und gibt Server eine Referenz darauf
+
+### Distributed Garbage Collection
+Objekt darf erst gelöscht werden, wenn:
+- keine lokalen Referenzen existieren
+- keine entfernten Referenzen existieren
+
+Zusätzlich kann mit Timeout gearbeitet werden.
+
+### Java Naming and Directory Service
+Bsp. für Naming Service = RMI_Registry
+
+JNDI = Java Naming and Directory Interface 
+API welches die Möglichkeit bietet, Naming und Directory Service Funktionalitäten in Java Anwendungen zu nutzen.
 
 
+### Limitierungen von RMI
 
+### Alternativen für RMI
+CORBA (Common Object Request Broker Architekture)
+Probleme mit CORBA => nicht Internettauglich
+## Web Services
+
+### Service Oriented Architekture (SOA)
+
+XML Standarts
+Web-Services stellen eine Technologieplattform dar, mit deren Hilfe Servicearchitekturen realisiert werden können.
+
+SOAP = Simple Opject API (SOAP)
+WSDL = Web Service Definition Language 
+Beschreibung der Schnittstelle (XML-Datei welche die Remote Schnittstelle definiert)
+
+UDDI = Universal Description, Discovery, and Integration => Naming Service
+
+Web Serives basieren auf Text ("Jede Programmiersprache kann Text") => Unabhängiger Aufbau durch Serialisierung/Deserialisierung von Textnachrichten
 
 # Wahrscheinlich nicht Prüfungsrelevant aber interessant
 API-Gateway = Früher. Session Dispatcher => Verteilt API-Anfragen auf die verteilten Backend-Dienste.
-
-Idempotent = Mehrfachauslieferung macht keine Probleme
-
 
 
 [^1]: Fähigkeit, dass Funktionen oder Methoden in verschiedenen Objekten unterschiedlich ausgeführt werden können
