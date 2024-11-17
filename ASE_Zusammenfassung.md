@@ -788,33 +788,24 @@ Mögliche Fehler:
 > Hier ist wichtig wie damit umgegangen wird. Wird ein Request erneut gesendet, wie lange wartet man auf die Antwort, etc.
 
 ## RMI (Remote Method Invocation)
+RMI = Java-Mechanismus zur Realisierung der Interprozesskommunikation
+Mit Hilfe von RMI können Methoden entfernter Objekte aufgerufen werden
+> Ziel: Aufruf sollte dabei möglichst transparent sein
 
 >**RMI nutzt Proxy Pattern**
 >>Stub und Skeleton Repräsentieren die Platzhalter => Proxy
 
-Java-Mechanismus zur Realisierung der Interprozesskommunikation
-
-Mit Hilfe von RMI können Methoden entfernter Objekte aufgerufen werden
-> Ziel: Aufruf sollte dabei möglichst transparent sein
 
 ### Architektur von RMI
 
 Server = Dienstanbieter
 Client = Dienstnehmer
 
-(Bild einfügen)
-
-Server muss in Middleware-Schichte verankert werden.
-
-
-Verankerung des Servers in der Mittleware (RMI-Mechanismus) 
-erfolgt über Vererbungskonventionen
-> Marker Interface => Makiert, dass Klasse öffentlich zugänglich gemacht werden kann
-
->Naming Service = RMI Registry
->> Name, Remotereferenz
+<img src="Bilder/RMI_Architektur.png">
 
 ### Codebeispiel: Server 
+
+<img src="Bilder/RMI_Server_Codebeispiel.png" width=400>
 
 ExportObjekt => Erzeugt Skeleton und macht Sockel auf
 LocateRegistry.getRegistry() => Sucht Naming Service (falls dieser nicht läuft Startet dieser).
@@ -824,6 +815,9 @@ rebind() überschreibt falls es den Aufruf schon gibt
 bind() versucht Aufruf zu setzen und wirft Fehler, falls schon belegt
 
 ### Codebeispiel: Client
+
+<img src="Bilder/RMI_Client_Codebeispiel.png" width=400>
+
 LocateRegistry.getRegistry() => Sucht Naming Service
 registry.lookup("rmi://Hello"); => Ruft Hello von Remote Objekt auf
 
@@ -842,21 +836,24 @@ registry.lookup("rmi://Hello"); => Ruft Hello von Remote Objekt auf
 
 Mittleware = Vermittlungsschnittstelle welche möglichst transparent weggekapselt werden soll.
 
-
 Wichtig ist, dass man bei RMI bei mehreren Parallelen Zugriffen auf den Server direkt im Multithreading ist und damit Concurrency Konflikte vermeiden muss!!!
-**Nebenläufige Programmierung**
+=> **Nebenläufige Programmierung**
+>Grund dafür ist, dass alle Threads Zugriff auf den Heap haben D.h. Heap-Variablen werden gemeinsam benutzt!
 
+### Parameterübergabe
+Bei RMI findet ein Remote Aufruf statt also ein Call by Value => Es werden Kopien des Objekts erzeugt
 
-Remote Aufruf = Call by Value => Es werden Kopien des Objekts erzeugt
+<img src="Bilder/RMI_Remote_Parameteraufruf.png" width=400>
 
+### Problem mit RMI: Request-Response
 Request-Response Muster= Client stellt Request, Server reagiert darauf (Response)
-
-RMI = Synchrones Request - Response Muster
-Client stellt Anfrage und wartet auf Antwort
-Server kann nicht aktiv Client benachrichtigen
+- Server Kann Client nicht aktiv benachrichtigen
 
 **Workaround: Callback Design Pattern** 
 ### Callback Design
+
+<img src="Bilder/RMI_Callback_Design_Pattern.png" width=400>
+
 Client stellt auch Remote-Objekt zu Verfügung und gibt Server eine Referenz darauf
 
 ### Distributed Garbage Collection
@@ -868,12 +865,14 @@ Zusätzlich kann mit Timeout gearbeitet werden.
 
 ### Java Naming and Directory Service
 Bsp. für Naming Service = RMI_Registry
+Naming Service enthält Name-Wert-Paare
+- Namen sind eindeutig
+- Werte stellen Ressourcen bzw. Objekte dar, welche gemeinsam genutzt werden sollen.
 
 JNDI = Java Naming and Directory Interface 
-API welches die Möglichkeit bietet, Naming und Directory Service Funktionalitäten in Java Anwendungen zu nutzen.
+- API welches die Möglichkeit bietet, Naming und Directory Service Funktionalitäten in Java Anwendungen zu nutzen.
 
-
-### Limitierungen von RMI
+<img src="Bilder/RMI_JNDI_Beispiel_1.png" width=500>
 
 ### Alternativen für RMI
 CORBA (Common Object Request Broker Architekture)
@@ -898,3 +897,6 @@ API-Gateway = Früher. Session Dispatcher => Verteilt API-Anfragen auf die verte
 
 
 [^1]: Fähigkeit, dass Funktionen oder Methoden in verschiedenen Objekten unterschiedlich ausgeführt werden können
+
+
+
