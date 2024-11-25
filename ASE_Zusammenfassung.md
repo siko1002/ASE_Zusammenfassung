@@ -892,8 +892,152 @@ UDDI = Universal Description, Discovery, and Integration => Naming Service
 
 Web Serives basieren auf Text ("Jede Programmiersprache kann Text") => Unabhängiger Aufbau durch Serialisierung/Deserialisierung von Textnachrichten
 
+
+# Java Messaging System
+
+Sync
+```mermaid
+graph TD;
+    RMI--> Old_Web_Services;
+    Old_Web_Services --> REST;
+```
+
+
+Eine, Anwendung, die auf einem Messaging System beruht, wird oft als loses gekoppeltes System bezeichnet.
+
+Asynchron durch zeitliche Entkoppelung.
+
+Nachricht an Message Broker = Synchron
+Asynchronität ist die Kommunikation zwischen Teilelementen
+
+Messaging System wird dazu verwendet, dass mehrere Anwendungen Informationen als Nachrichten austauschen.
+
+Nachricht = Paket aus Daten und Routing Informationen
+Nachrichtenversand über MOM
+
+## MOM = Message Orientated Middleware
+
+### Messaging Modelle
+
+#### Publish Subscribe (Pub/Sub)(1 -> Viele)
+Vergleichbar mit Newsletter 
+Information wird an alle, welche das Topic aboniert haben ausgeliefert
+
+Beliebig viele Publisher können Messages zu einem Topic senden. 
+Alle Subscriber, welche dieses Topic aboniert haben empfangen diese Nachrichten.
+- Subscriber kann bei MOM für ein Thema registrieren
+
+
+#### Point to Point (P2P) (1->1)
+
+Wenn Nachricht rein kommt entscheidet Messaging System an welchen Receiber ausgeliefert wird.
+
+Skallierbar, da beliebig Receiver hinzugefügt/entfernt werden können.
+
+1. Erzeugung einer Connection
+2. Auf Connection wird eine oder mehrere Sessions erzeugt
+3. Auf Session werden eine oder mehrere Sender/Receiver erzeugt
+4. Registrierung and Queue (Nachrichten empfangen/ausliefern)
+
+
+Asynchrones Lesen per Observer 
+- Registrierung von Listenern (onMessage)
+    - Beim Aufruf wird ein neuer Thread gestartet (dadurch asynchron)
+
+
+## Broker Varianten
+
+- Internal Broker = Internes Messaging System
+- External Broker = Eigenständiges System, welches läuft
+- Embedded Broker = Man kann diesen Messaging Broker auch in seinem Programm mit laufen lassen
+
+
+## Zusammenspiel der Komponenten
+
+1. Client schaut wo liegt das Messaging service (lookup) => Referenz auf JMS-Client Runtime
+2. Erzeuge Connection
+3. Erzeuge Session (Auf einer Connection können mehrere Sessions liegen)
+    - Senden/Empfangen kann unterschiedliche Quality of Service unterstützen. Diese QOS werden an der Session festgelegt.
+    - Je höher QOS ist desto aufwendiger diese Nachrichten zu senden
+4. Lookup Topic/Queue => Womit möchte ich kommunizieren
+    - Man kann auch dynamisch Topics/Queues erzeugen
+5. Erzeuge Publisher/Subscriber (Sender/Receiver)
+    - Topic Publisher/Subscriber
+    - Queue Sender/Receiver
+6. Message Handling
+
+## QoS (Quality of Service)
+
+
+## Message Typen
+Text
+Object 
+Byte
+Sream(Streaming)
+MapMessage = Key/Value Paare
+
+### Aufbau einer Message
+Message besteht aus drei Teilen (Header, Properties und Payload)
+
+Header = wird automatisch von MOM gesetzt (Destination, DeliveryMode, Message ID, Priority ...)
+Properties = Benutzerdefinierte Properties
+Payload = Inhalt (Text, Byte, Object, etc.)
+
+
+## Features
+### Selektoren
+Selektoren "Filtern" die Nachrichten auf bestimmte eigenschaften => Vorsortierung anhand der Properties => Client empfängt nur Nachrichten "wie er möchte"
+
+
+### Temporäre Queue
+Zwischen Sender und Empfänger kann jederzeit ein "privater" Kanal eingerichtet werden, welcher nicht im JNDI sichtbar ist.
+Die temporäre Queue wird mit in Session gegeben.
+=> Dadurch ist asynchrones Request/Response möglich
+
+### Weitere
+Nachrichten können transient (default) oder persistent(Nachricht wird gehalten bis Empfänger da ist) sein
+- Meistens mit Gültigkeitsdatum um nicht ewig zu halten
+
+Nachrichtenversand und -empfang kann in Transaktionen eingebettet werden.
+
+Topics können als dauerhaft gekennzeichnet werden => dasselbe wie persistente Nachrichten.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Wahrscheinlich nicht Prüfungsrelevant aber interessant
 API-Gateway = Früher. Session Dispatcher => Verteilt API-Anfragen auf die verteilten Backend-Dienste.
+
+## Praktische Begriffe
+Resilient = Wiederstandsfähig
 
 
 [^1]: Fähigkeit, dass Funktionen oder Methoden in verschiedenen Objekten unterschiedlich ausgeführt werden können
