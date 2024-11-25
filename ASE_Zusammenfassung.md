@@ -652,7 +652,7 @@ Wenn Software kompliziertet ist als sie sein muss sinkte ihre Qualität
 ## Fazit von Design Prinzipien
 Die Anwendung der Prinzipien führt nicht automatisch zu besserer Software. Meistens landet man bei "es kommt darauf an!" abhängig von dem jeweiligen Fall.
 
-# Verteilte Systeme
+# Architekturen für Verteilte Systeme
 
 Verteiltes System = Zusmmenschluss unabhängiger Computer, die sich für den Benutzer als ein einziges System präsentieren.
 - Menge interagierender Prozesse (oder Prozessoren), welche über keinen gemeinsamen Speicher verfügen und daher mit Nachrichten miteinander kommunizieren.
@@ -787,7 +787,7 @@ Mögliche Fehler:
 
 > Hier ist wichtig wie damit umgegangen wird. Wird ein Request erneut gesendet, wie lange wartet man auf die Antwort, etc.
 
-## RMI (Remote Method Invocation)
+# RMI (Remote Method Invocation)
 RMI = Java-Mechanismus zur Realisierung der Interprozesskommunikation
 Mit Hilfe von RMI können Methoden entfernter Objekte aufgerufen werden
 > Ziel: Aufruf sollte dabei möglichst transparent sein
@@ -796,14 +796,14 @@ Mit Hilfe von RMI können Methoden entfernter Objekte aufgerufen werden
 >>Stub und Skeleton Repräsentieren die Platzhalter => Proxy
 
 
-### Architektur von RMI
+## Architektur von RMI
 
 Server = Dienstanbieter
 Client = Dienstnehmer
 
 <img src="Bilder/RMI_Architektur.png">
 
-### Codebeispiel: Server 
+## Codebeispiel: Server 
 
 <img src="Bilder/RMI_Server_Codebeispiel.png" width=400>
 
@@ -814,14 +814,14 @@ Konvention Protokoll vorne anfügen (Bsp. "rmi://Hallo" und nicht "//Hallo")
 rebind() überschreibt falls es den Aufruf schon gibt
 bind() versucht Aufruf zu setzen und wirft Fehler, falls schon belegt
 
-### Codebeispiel: Client
+## Codebeispiel: Client
 
 <img src="Bilder/RMI_Client_Codebeispiel.png" width=400>
 
 LocateRegistry.getRegistry() => Sucht Naming Service
 registry.lookup("rmi://Hello"); => Ruft Hello von Remote Objekt auf
 
-### Reihenfolge der Ausführung
+## Reihenfolge der Ausführung
 - Starten der rmiregistry (in Shell)
     - rmiregistry repräsentiert Naming-Service
     - Remote-Interfaces müssen im rmiregistry-Classpath stehen
@@ -830,7 +830,7 @@ registry.lookup("rmi://Hello"); => Ruft Hello von Remote Objekt auf
 - Starten des Clients (in Shell)
     
 
-### Middleware bei RMI
+## Middleware bei RMI
 - Stub = Proxy => Macht Netzerkrequest 
 - Skeleton = Socketlistener = Nimmt Netzwerkrequest entgegen und verwaltet das Serverobjekt
 
@@ -840,30 +840,30 @@ Wichtig ist, dass man bei RMI bei mehreren Parallelen Zugriffen auf den Server d
 => **Nebenläufige Programmierung**
 >Grund dafür ist, dass alle Threads Zugriff auf den Heap haben D.h. Heap-Variablen werden gemeinsam benutzt!
 
-### Parameterübergabe
+## Parameterübergabe
 Bei RMI findet ein Remote Aufruf statt also ein Call by Value => Es werden Kopien des Objekts erzeugt
 
 <img src="Bilder/RMI_Remote_Parameteraufruf.png" width=400>
 
-### Problem mit RMI: Request-Response
+## Problem mit RMI: Request-Response
 Request-Response Muster= Client stellt Request, Server reagiert darauf (Response)
 - Server Kann Client nicht aktiv benachrichtigen
 
 **Workaround: Callback Design Pattern** 
-### Callback Design
+## Callback Design
 
 <img src="Bilder/RMI_Callback_Design_Pattern.png" width=400>
 
 Client stellt auch Remote-Objekt zu Verfügung und gibt Server eine Referenz darauf
 
-### Distributed Garbage Collection
+## Distributed Garbage Collection
 Objekt darf erst gelöscht werden, wenn:
 - keine lokalen Referenzen existieren
 - keine entfernten Referenzen existieren
 
 Zusätzlich kann mit Timeout gearbeitet werden.
 
-### Java Naming and Directory Service
+## Java Naming and Directory Service
 Bsp. für Naming Service = RMI_Registry
 Naming Service enthält Name-Wert-Paare
 - Namen sind eindeutig
@@ -874,85 +874,180 @@ JNDI = Java Naming and Directory Interface
 
 <img src="Bilder/RMI_JNDI_Beispiel_1.png" width=500>
 
-### Alternativen für RMI
+## Alternativen für RMI
 CORBA (Common Object Request Broker Architekture)
 Probleme mit CORBA => nicht Internettauglich
-## Web Services
-
-### Service Oriented Architekture (SOA)
-
-XML Standarts
-Web-Services stellen eine Technologieplattform dar, mit deren Hilfe Servicearchitekturen realisiert werden können.
-
-SOAP = Simple Opject API (SOAP)
-WSDL = Web Service Definition Language 
-Beschreibung der Schnittstelle (XML-Datei welche die Remote Schnittstelle definiert)
-
-UDDI = Universal Description, Discovery, and Integration => Naming Service
-
-Web Serives basieren auf Text ("Jede Programmiersprache kann Text") => Unabhängiger Aufbau durch Serialisierung/Deserialisierung von Textnachrichten
 
 
-# Java Messaging System
 
-Sync
+
+# Service Oriented Architekture (SOA)
+
+**Idee der SOA = Schnittstellen werden zu standartisierten Services umfunktioniert**
+> - allgemeine Mechanismen zur Beschreibung von Finden und Kommunikation mit Services benötigt
+> - Middleware orchestriert Services und ist selbst als Service erreichbar
+
+<img src="Bilder/SOA_Architektur.png" width=400>
+
+## Allg. Definition SOA
+SOA = Paradigma für die Strukturierung und Nutzung verteilter Funktionalität, die von unterschiedlichen Benutzern verantwortet wird.
+> SOA = Architekturmuster, welches den Aufbau einer Anwendungslandschaft aus einzelnen Anwendungen beschreibt.
+> - Die Anwendungen sind lose gekoppelt, indem sie ihre Funktionalitäten durch Services anbieten.
+
+# Web Services
+- XML Standarts
+    - Web-Services stellen eine Technologieplattform dar, mit deren Hilfe Servicearchitekturen realisiert werden können.
+- Web Serives basieren auf Text ("Jede Programmiersprache kann Text")
+    - Unabhängiger Aufbau durch Serialisierung/Deserialisierung von Textnachrichten
+
+## Web Service Dreieck
+
+<img src="Bilder/Web_Service_Dreieck.png" width=400>
+
+> UDDI = Universal Description, Discovery, and Integration => Naming Service
+
+## SOAP = Simple Opject API (SOAP)
+SOPA-Spezifikation legt fest, wie Nachrichten aufgebaut sein müssen um als SOAP-Nachricht zu gelten.
+SOAP = Kommunikationsprotokoll (textbasiert)
+
+<img src="Bilder/Aufbau_SOAP_Nachricht.png" width=200>
+
+> Aufbau einer SOAP Nachricht
+
+```xml
+<s:envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:body>
+        <ns2:isCreditworthy xmlns:ns2="http://bank/">
+            <arg0>Hans</arg0>
+            <arg1>100.0</arg1>
+        </ns2:isCreditworthy>
+    </s:body>
+</s:envelope>
+```
+> Beispiel einer SOAP Nachricht für einen Kreditdienst
+
+## WSDL = Web Service Definition Language
+XML-Vokabular zur Beschreibung von Schnittstellen
+
+WSDL beschreibt:
+- bereitgestellte Funktionen
+- Datentypen der Nachrichten (Request und Response)
+- Für Protokoll relevante Informationen
+- Adressen unter denen Dienste erreichbar sind
+
+<img src="Bilder/Aufbau_WSDL_Dokument.png" width=200> 
+<table>
+<th>Element</th><th>Definition</th>
+    <tr>
+        <td>definitions</td>
+        <td>Wurzelelement</td>
+    </tr>
+    <tr>
+        <td>types</td>
+        <td>Definiert Benutzerdefinierte Datentypen</td>
+    </tr>
+    <tr>
+        <td>messages / operations</td>
+        <td>Benennt Nachrichten</td>
+    </tr>
+    <tr>
+        <td>portType</td>
+        <td>Definiert Ein- und Ausgabenachrichten</td>
+    </tr>
+    <tr>
+        <td>binding</td>
+        <td>Beschreibt Details, wie Nachrichten über das Netzwerk übertragen werden</td>
+    </tr>
+    <tr>
+        <td>service</td>
+        <td>Beschreibt die Adressierung des Web Service</td>
+    </tr>
+</table>
+
+
+## Arten des Nachrichtenaustauschs
+
+<img src="Bilder/Arten_Des_Nachrichtenaustauschs.png">
+
+- One Way
+    - Nur eine Input-Nachricht
+- Request-Response
+    - eine Input-, eine Output-, ggf. fault-Nachricht
+- Solicit-Response
+    - Operation hat Output- und Input-Nachricht => Aktion geht von Server aus!
+- Notification
+    - Notification von Server an Client
+    - Hat nur eine Output-Nachricht
+
+
+
+
+
+
+# Java Messaging System (JMS)
+
 ```mermaid
 graph TD;
-    RMI--> Old_Web_Services;
-    Old_Web_Services --> REST;
+    Client_1 <--> Message_Broker;
+    Client_2 <--> Message_Broker;
+    Client_3 <--> Message_Broker;
+    Client_4 <--> Message_Broker;
+    Client_5 <--> Message_Broker;
+    Client_6 <--> Message_Broker;
 ```
-
-
-Eine, Anwendung, die auf einem Messaging System beruht, wird oft als loses gekoppeltes System bezeichnet.
-
-Asynchron durch zeitliche Entkoppelung.
-
-Nachricht an Message Broker = Synchron
-Asynchronität ist die Kommunikation zwischen Teilelementen
+>Eine, Anwendung, die auf einem Messaging System beruht, wird oft als loses gekoppeltes System bezeichnet.
 
 Messaging System wird dazu verwendet, dass mehrere Anwendungen Informationen als Nachrichten austauschen.
+- Nachricht = Paket aus Daten und Routing Informationen
+- Nachrichtenversand über MOM
+>Nachricht an Message Broker = Synchron
+>Asynchron durch zeitliche Entkoppelung
+>>Kommunikation zwischen Teilelementen = Asynchron
 
-Nachricht = Paket aus Daten und Routing Informationen
-Nachrichtenversand über MOM
 
 ## MOM = Message Orientated Middleware
 
+<img src="Bilder/MOM_Aufbau.png" width=400>
+
 ### Messaging Modelle
+
+<img src="Bilder/MOM_Messaging_Modelle.png" width=400>
 
 #### Publish Subscribe (Pub/Sub)(1 -> Viele)
 Vergleichbar mit Newsletter 
-Information wird an alle, welche das Topic aboniert haben ausgeliefert
+- Einer oder mehrere Publisher(Quellen) senden Messages an ein Topic
+- MOM leitet Messages an alle Subscriber(Empfänger) weiter
+    - Information wird an alle, welche das Topic aboniert haben ausgeliefert
+    - Subscriber registrieren sich bei MOM für Topics
 
-Beliebig viele Publisher können Messages zu einem Topic senden. 
-Alle Subscriber, welche dieses Topic aboniert haben empfangen diese Nachrichten.
-- Subscriber kann bei MOM für ein Thema registrieren
-
+<img src="Bilder/MOM_Pub_Sub.png" width=400>
 
 #### Point to Point (P2P) (1->1)
 
-Wenn Nachricht rein kommt entscheidet Messaging System an welchen Receiber ausgeliefert wird.
+- Ein oder Mehrere Sender stellen Messages in eine Queue
+    - Nachricht kann von einem Receiver abgeholt werden (aus Queue rausnehmen)
+    - Alternativ liefert MOM Nachricht an einen Empfänger aus
+- **Eine Message wird an genau einen Empfänger ausgeliefert**
+<img src="Bilder/MOM_P2P.png" width=400>
 
-Skallierbar, da beliebig Receiver hinzugefügt/entfernt werden können.
+>Gut skallierbar, da beliebig Receiver hinzugefügt/entfernt werden können.
 
 1. Erzeugung einer Connection
 2. Auf Connection wird eine oder mehrere Sessions erzeugt
 3. Auf Session werden eine oder mehrere Sender/Receiver erzeugt
 4. Registrierung and Queue (Nachrichten empfangen/ausliefern)
 
-
 Asynchrones Lesen per Observer 
 - Registrierung von Listenern (onMessage)
     - Beim Aufruf wird ein neuer Thread gestartet (dadurch asynchron)
 
-
 ## Broker Varianten
 
-- Internal Broker = Internes Messaging System
-- External Broker = Eigenständiges System, welches läuft
-- Embedded Broker = Man kann diesen Messaging Broker auch in seinem Programm mit laufen lassen
+- Internal Broker = Der Message Broker ist direkt innerhalb der Anwendung oder des Application Servers integriert
+- External Broker = Der Message Broker wird als eigenständiger externer Service betrieben. Anwendungen verbinden sich über das Netzwerk mit diesem Broker.
+- Embedded Broker = Der Broker ist in die Anwendung selbst eingebettet, d. h., er läuft im selben Prozess wie die Anwendung.
 
-
-## Zusammenspiel der Komponenten
+## Zusammenspiel der Komponenten (Client, JNDI, Messagebroker und Messageserver)
 
 1. Client schaut wo liegt das Messaging service (lookup) => Referenz auf JMS-Client Runtime
 2. Erzeuge Connection
@@ -966,7 +1061,16 @@ Asynchrones Lesen per Observer
     - Queue Sender/Receiver
 6. Message Handling
 
-## QoS (Quality of Service)
+## Kontaktaufbahme zu MOM
+
+1. MOM-System registriert einen Naming-Service
+    - sogenannte Connection-ListFactory
+    - (optional) eingerichtete Queues
+2. Über Connection-Factory wird Connection zu MOM-System erzeugt
+3. Von MOM-System wird eine Session angefordert
+    - Bei Session wird **QOS** spezifiziert
+
+### Quality of Service (QOS)
 
 
 ## Message Typen
