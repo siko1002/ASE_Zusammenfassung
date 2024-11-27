@@ -1071,14 +1071,34 @@ Asynchrones Lesen per Observer
     - Bei Session wird **QOS** spezifiziert
 
 ### Quality of Service (QOS)
-
+- AUTO_ACKNOWLEDGE
+- DUPS_OK_ACKNOWLEDGE
+- CLIENT_ACKLOWLEDGE
 
 ## Message Typen
-Text
-Object 
-Byte
-Sream(Streaming)
-MapMessage = Key/Value Paare
+<table>
+<tr>
+<th>Text</th>
+<td>Test <br/> Playload = String</td>
+</tr>
+<tr>
+<th>Object</th>
+<td>Objekte welche serialisiert/deserialisiert werden. <br/>Klassendefinition muss bei Sender und Empfänger definiert sein.</td>
+</tr>
+<tr>
+<th>Byte</th>
+<td>primitive Datentypen(nummerisch)</td>
+</tr>
+<tr>
+<th>Stream(Streaming)</th>
+<td>Sequenz von primitiven Typen => StreamMessage respektiert die Einfügungsreihenfolge</td>
+</tr>
+<tr>
+<th>Map</th>
+<td>Name/Value-Paare-Paare</td>
+</tr>
+
+</table>
 
 ### Aufbau einer Message
 Message besteht aus drei Teilen (Header, Properties und Payload)
@@ -1092,7 +1112,6 @@ Payload = Inhalt (Text, Byte, Object, etc.)
 ### Selektoren
 Selektoren "Filtern" die Nachrichten auf bestimmte eigenschaften => Vorsortierung anhand der Properties => Client empfängt nur Nachrichten "wie er möchte"
 
-
 ### Temporäre Queue
 Zwischen Sender und Empfänger kann jederzeit ein "privater" Kanal eingerichtet werden, welcher nicht im JNDI sichtbar ist.
 Die temporäre Queue wird mit in Session gegeben.
@@ -1103,30 +1122,44 @@ Nachrichten können transient (default) oder persistent(Nachricht wird gehalten 
 - Meistens mit Gültigkeitsdatum um nicht ewig zu halten
 
 Nachrichtenversand und -empfang kann in Transaktionen eingebettet werden.
-
 Topics können als dauerhaft gekennzeichnet werden => dasselbe wie persistente Nachrichten.
 
+## Anwendungsfälle
+<table>
+<tr>
+<th>Nachrichtenaustausch</th>
+<td><img src="Bilder/JMS_Nachrichtenaustausch.png" width=400></td>
+<td>Fire-and-Forget</td>
+</tr>
+<tr>
+<th>Request/ Async-Response-Pattern</th>
+<td><img src="Bilder/JMS_Request_Async_Response.png" width=400></td>
+<td>Response ist Asynchron</td>
+</tr>
+<tr>
+<th>Messaging-Based Service API</th>
+<td><img src="Bilder/JMS_Messaging_Based_Service_API.png" width=400></td>
+<td>Event-Channel ist eine „One-Way“-Benachrichtigung an alle interessierten Services.</td>
+</tr>
+</table>
 
+## Vergleich Synchron vs. asynchron
 
+<table>
+<tr>
+<th>Synchron</th>
+<td><img src="Bilder/JMS_Synchrone_API.png"></td>
+</tr>
+<tr>
+<th>Asynchron</th>
+<td><img src="Bilder/JMS_Asynchrone_API.png"></td>
+</tr>
+</table>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Bei Synchroner API ist Client blockiert, bis die Bestellung/Anfrage abgearbeitet ist.
+- Hat jeder Service eine Verfügbarkeit von 99,5% ist die Gesamtverfügbarkeit (99,5%)<sup>3</sup>= 98,5%
+- Bei 1 Services (99,5)<sup>10</sup>=95,1%
+- usw.
 
 
 
