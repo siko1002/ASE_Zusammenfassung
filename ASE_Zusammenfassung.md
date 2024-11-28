@@ -1163,7 +1163,103 @@ Bei Synchroner API ist Client blockiert, bis die Bestellung/Anfrage abgearbeitet
 
 
 
+# Verteilte Transaktionen
 
+Verteilte Transaktionen sind Transaktionen, welche über mehrere Datenbanksysteme stattfinden.
+
+<img src="Bilder/Verteilte_Transaktion_Beispiel_Oracle_IBM.png" width=400>
+
+## ACID
+
+- A–Atomar
+    - Eine Transaktion wird komplette oder gar nicht ausgeführt (commit oder abort)
+- C–Konsistent
+    - Eine Transaktion überführt einen konsistenten Zustand in einer anderen konsistenten Zustand.
+    - Wird durch Transaktionen garantiert
+- I–Isoliert
+    - Eine Transaktion läuft isoliert, wenn sie den selben Effekt hat, egal ob sie parallel mit anderen Transaktionen oder alleine abläuft. Transaktionen sind serialisierbar.
+    - Isolierungsstufen / Isolierungsgrade
+        - READ COMMITTED
+        - REPEATABLE READ
+        - SERIALIZABLE
+- D–Dauerhaft
+    - Die Änderungen einer Transaktion sind nach der Transaktion dauerhaft gespeichert.
+    - Die dauerhafte Speicherung der Daten muss auch nach einem Systemfehler garantiert sein.
+
+ACID kann nur von relationalen Datenbanken garantiert werden. NoSQL-Datenbanken garantieren nicht alle ACID-Funktionalitäten. NoSQL nutzt häufig BASE.
+
+## Transaktionsmanager
+
+<img src="Bilder/Verteilte_Transaktion_Beispiel_Oracle_IBM.png">
+
+### Ablauf
+
+<img src="Bilder/Verteilte_Systeme_Transaktionsmanager_Ablauf.png">
+
+
+## 2-Phasen Commit Protokoll
+
+Analogie Hochzeit
+
+An Oracle: Kannst du den Commit vollziehen? Ja
+An IBM: Kannst du den Commit vollziehen? Ja
+Uncertain Phase (Wenn hier was schief läuft ist die Bestätigung da aber die Transaktion nicht durch)
+Transaktionsmanager führt den Commit aus ("Mach den Commit")
+
+Phasen:
+
+1. Prepare Phase: Alle werden befragt ob sie den Commit machen können
+- Uncertain Phase (Wenn hier was schief läuft ist die Bestätigung da aber die Transaktion nicht durch)
+    - Wenn hier was schief läuft "stehen" alle Beteiligten
+2. Commit Phase: Er sagt okay vollzieht den Commit oder alle zurückrollen
+
+<img src="Bilder/Verteilte_Systeme_Transaktionsphasen.png">
+
+## BASE
+
+- BA = Basically Available 
+    - Stellt garantiert allen Benutzern Abfragen zur Verfügung => Keine Konsistenz garantiert
+- S = Soft State 
+    - States können sich über äußere Einflüsse andern
+- E = Eventually Consistent 
+    - Nicht eventuell sondern Irgendwann Konsistent
+
+Beispiel der Microservice Architektur => Nicht mit 2-Phasen-Transaktion umsetzbar => Funktioniert einfach nicht
+
+## SAGA - Transaktionsmodell
+
+Keine Abkürzung => Geschichte Sage
+
+Sequent von Transaktionen, welche Dinge aktualisieren 
+Jede Änderungsoperation die ich habe muss eine Rückgängigkeitsmöglichkeit haben
+"Ich muss mich selbst darum kümmern, dass die Dinge rückgängig machbar sind"
+
+Eine verteilte Transaktion wird in lokale Transaktionen aufgeteilt
+
+Bsp Folie 18 => Die Gesamten kleinen Transaktionen sind die Saga
+Wenn etwas schief geht bei Schritt (5) müssen überall Kompensierende Transaktionen aufgerufen werden können, welche Schritt 1-4 rückgängig machen können.
+
+### Orchestrierung
+
+Merkhilfe => Orchester mit Dirigent => Ohne Dirigent kann Orchester nicht spielen
+
+### Choreographie
+
+Komponenten organisieren sich selbst
+
+Merkhilfe => Balett => Jeder weiß was er zu tun hat und kuckt nur auf seine Nachbarn ob das klappt
+
+## CAP-Theorem
+
+<img src="Bilder/Verteilte_Systeme_CAP_Theorem.png">
+
+C - Consistency (Konsistenz )
+
+A - Availability (Verfügbarkeit)
+
+P - Partition Tolerance (Ausfalltoleranz)
+
+Man kann immer nur 2 Haben (CA, CP, AP) 
 
 
 
