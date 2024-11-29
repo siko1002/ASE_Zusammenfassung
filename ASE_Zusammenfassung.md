@@ -1165,7 +1165,7 @@ Bei Synchroner API ist Client blockiert, bis die Bestellung/Anfrage abgearbeitet
 
 # Verteilte Transaktionen
 
-Verteilte Transaktionen sind Transaktionen, welche über mehrere Datenbanksysteme stattfinden.
+Verteilte Transaktionen sind Transaktionen, welche über mehrere transaktionale Systeme involviert sind.
 
 <img src="Bilder/Verteilte_Transaktion_Beispiel_Oracle_IBM.png" width=400>
 
@@ -1175,9 +1175,10 @@ Verteilte Transaktionen sind Transaktionen, welche über mehrere Datenbanksystem
     - Eine Transaktion wird komplette oder gar nicht ausgeführt (commit oder abort)
 - C–Konsistent
     - Eine Transaktion überführt einen konsistenten Zustand in einer anderen konsistenten Zustand.
-    - Wird durch Transaktionen garantiert
+    - Wird durch Transaktionsdesign realisiert
 - I–Isoliert
-    - Eine Transaktion läuft isoliert, wenn sie den selben Effekt hat, egal ob sie parallel mit anderen Transaktionen oder alleine abläuft. Transaktionen sind serialisierbar.
+    - Eine Transaktion läuft isoliert, wenn sie den selben Effekt hat, egal ob sie parallel mit anderen Transaktionen oder alleine abläuft.
+    - Wenn ich eine isolierte Umbuchung mache ist das Ergebnis erst nach Ende der Transaktion sichtbar
     - Isolierungsstufen / Isolierungsgrade
         - READ COMMITTED
         - REPEATABLE READ
@@ -1190,21 +1191,29 @@ ACID kann nur von relationalen Datenbanken garantiert werden. NoSQL-Datenbanken 
 
 ## Transaktionsmanager
 
-<img src="Bilder/Verteilte_Transaktion_Beispiel_Oracle_IBM.png">
+<img src="Bilder/Verteilte_Transaktion_Beispiel_Oracle_IBM.png" width=300>
 
 ### Ablauf
 
-<img src="Bilder/Verteilte_Systeme_Transaktionsmanager_Ablauf.png">
 
+
+<table>
+<tr>
+<td><img src="Bilder/Verteilte_Systeme_Transaktionsmanager_Schematischer_Ablauf.png" width=300></td>
+<td>Diese verteilte Transaktion muss von außen gesteuert werden<br>Die beteiligten Systeme, müssen dafür ihre Autonomie über das Transaktionsverfahren aufgeben!</td>
+</tr>
+<tr>
+<td><img src="Bilder/Verteilte_Systeme_Transaktionsmanager_Ablauf.png" width=400></td>
+<td>
+1.      Anwendung eröffnet Transaktion => Erhält Transaktions-ID<br>
+2-3.    Beteiligte Ressourcen registrieren sich bei Transaktionsmanager unter der Transaktions-ID<br>
+4.      Anwendung beendet (commit oder abort) die Transaktion mit Transaktions-ID<br>
+5.      Transaktionsmanager führt Commit-Protokoll mit den an Transaktions beteiligten Ressourcen durch.
+</td></tr></table>
 
 ## 2-Phasen Commit Protokoll
 
-Analogie Hochzeit
-
-An Oracle: Kannst du den Commit vollziehen? Ja
-An IBM: Kannst du den Commit vollziehen? Ja
-Uncertain Phase (Wenn hier was schief läuft ist die Bestätigung da aber die Transaktion nicht durch)
-Transaktionsmanager führt den Commit aus ("Mach den Commit")
+<img src="Bilder/Verteilte_Systeme_Transaktionsphasen.png">
 
 Phasen:
 
@@ -1213,8 +1222,12 @@ Phasen:
     - Wenn hier was schief läuft "stehen" alle Beteiligten
 2. Commit Phase: Er sagt okay vollzieht den Commit oder alle zurückrollen
 
-<img src="Bilder/Verteilte_Systeme_Transaktionsphasen.png">
+## X/Open-Transaktionsmodell
 
+
+- Das Anwendungsprogramm initiiert Transaktionen über das TX Interface.
+- Der Transaktionsmanager koordiniert alle Transaktionen und stellt sicher, dass sie korrekt abgeschlossen werden.
+- Die Resource Manager führen die eigentlichen Operationen (Lesen, Schreiben) aus und werden über das XA Interface in die Transaktion eingebunden.
 ## BASE
 
 - BA = Basically Available 
@@ -1223,6 +1236,8 @@ Phasen:
     - States können sich über äußere Einflüsse andern
 - E = Eventually Consistent 
     - Nicht eventuell sondern Irgendwann Konsistent
+    - Zustand des Systems wird schrittweise über alle Knoten repliziert.
+        - System wird nach und nach konsistent
 
 Beispiel der Microservice Architektur => Nicht mit 2-Phasen-Transaktion umsetzbar => Funktioniert einfach nicht
 
@@ -1230,7 +1245,7 @@ Beispiel der Microservice Architektur => Nicht mit 2-Phasen-Transaktion umsetzba
 
 Keine Abkürzung => Geschichte Sage
 
-Sequent von Transaktionen, welche Dinge aktualisieren 
+Sequenz von Transaktionen, welche Dinge aktualisieren 
 Jede Änderungsoperation die ich habe muss eine Rückgängigkeitsmöglichkeit haben
 "Ich muss mich selbst darum kümmern, dass die Dinge rückgängig machbar sind"
 
@@ -1239,11 +1254,21 @@ Eine verteilte Transaktion wird in lokale Transaktionen aufgeteilt
 Bsp Folie 18 => Die Gesamten kleinen Transaktionen sind die Saga
 Wenn etwas schief geht bei Schritt (5) müssen überall Kompensierende Transaktionen aufgerufen werden können, welche Schritt 1-4 rückgängig machen können.
 
-### Orchestrierung
+<img src="Bilder/Verteilte_Systeme_SAGA_Transaktionsmodell.png">
+
+### Pattern: Orchestrierung
 
 Merkhilfe => Orchester mit Dirigent => Ohne Dirigent kann Orchester nicht spielen
 
-### Choreographie
+<img src="Bilder/Verteilte_Systeme_SAGA_Orchestrierung.png" width=400>
+
+Hier nimmt der OrderService den Platz als Orchestrator/Dirigent ein. Über ihn laufen alle Prozessabläufe.
+
+Nachteile:
+- Sollte der Dirigent ausfallen kann das gesamte System nichtmehr korrekt arbeiten, da die Anweisungen fehlen
+- Außerdem entsteht durch den Dirigent ein Flaschenhals, da der Dirigent alle Prozesse stattfinden abarbeiten muss, wodurch der Durchsatz ab einem gewissen Punkt sehr wahrscheinlich darunter leidet.
+
+### Pattern: Choreographie
 
 Komponenten organisieren sich selbst
 
