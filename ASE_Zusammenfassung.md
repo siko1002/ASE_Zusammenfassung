@@ -1244,17 +1244,16 @@ Beispiel der Microservice Architektur => Nicht mit 2-Phasen-Transaktion umsetzba
 ## SAGA - Transaktionsmodell
 
 Keine Abkürzung => Geschichte Sage
-
 Sequenz von Transaktionen, welche Dinge aktualisieren 
 Jede Änderungsoperation die ich habe muss eine Rückgängigkeitsmöglichkeit haben
 "Ich muss mich selbst darum kümmern, dass die Dinge rückgängig machbar sind"
+>=> Aufteilung einer verteilten Transaktion in lokale Transaktionen.
 
-Eine verteilte Transaktion wird in lokale Transaktionen aufgeteilt
 
-Bsp Folie 18 => Die Gesamten kleinen Transaktionen sind die Saga
-Wenn etwas schief geht bei Schritt (5) müssen überall Kompensierende Transaktionen aufgerufen werden können, welche Schritt 1-4 rückgängig machen können.
 
 <img src="Bilder/Verteilte_Systeme_SAGA_Transaktionsmodell.png">
+
+> Die Gesamten kleinen Transaktionen sind die Saga. Wenn etwas schief geht bei Schritt (5) müssen überall Kompensierende Transaktionen aufgerufen werden können, welche Schritt 1-4 rückgängig machen können.
 
 ### Pattern: Orchestrierung
 
@@ -1270,22 +1269,34 @@ Nachteile:
 
 ### Pattern: Choreographie
 
+Merkhilfe => Balett => Jeder weiß was er zu tun hat und kuckt nur auf seine Nachbarn ob das klappt
 Komponenten organisieren sich selbst
 
-Merkhilfe => Balett => Jeder weiß was er zu tun hat und kuckt nur auf seine Nachbarn ob das klappt
+<img src="Bilder/Verteilte_Systeme_SAGA_Choreographie.png">
+
+Jeder Service kommuniziert über bestimmte Events/Aufrufe und arbeitet nur eine Aufgabe ab ohne das große Ganze zu kennen.
+
 
 ## CAP-Theorem
 
+**Sehr wichtig!!!**
+
 <img src="Bilder/Verteilte_Systeme_CAP_Theorem.png">
 
-C - Consistency (Konsistenz )
+- C - Consistency (Konsistenz )
+    - Alle Clients sehen zum gleichen Zeitpunkt die gleichen Daten
+- A - Availability (Verfügbarkeit)
+    - Alle Clients können jederzeit Lese- und Schreibzugriffe durchführen, da stets vom System beantwortet werden
+- P - Partition Tolerance (Ausfalltoleranz)
+    - Das System kann trotz des Ausfalls einzelner Knoten(bzw. wenn einzelne Knoten nicht mehr miteinander kommunizieren können), als Ganzes weiterarbeiten.
+> **Man kann immer nur 2 Haben (CA, CP, AP)**
 
-A - Availability (Verfügbarkeit)
-
-P - Partition Tolerance (Ausfalltoleranz)
-
-Man kann immer nur 2 Haben (CA, CP, AP) 
-
+- CP – Anforderung
+    - Wenn man Konsistenz und Toleranz gegenüber Ausfällen fordert, kann man keine Verfügbarkeit garantieren.
+- CA – Anforderung
+    - Wenn man Konsistenz und Verfügbarkeit garantieren möchte, darf es zu keinen (Teil-) Ausfällen kommen.
+- AP – Anforderung
+    - Wenn ein System verfügbar und tolerant gegenüber (Teil-) Ausfällen (des Netzwerks) sein soll, kann keine Konsistenz zugesichert werden
 
 
 
