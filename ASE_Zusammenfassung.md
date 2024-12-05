@@ -1301,7 +1301,185 @@ Jeder Service kommuniziert über bestimmte Events/Aufrufe und arbeitet nur eine 
 
 
 
+# REST (Representational State Transfer)
 
+
+## Motivation für REST
+Motivation = viele Programme innerhalb einer Firma
+Benötigt wird ein "einheitliches" Kommunikationsprotokoll, welches von allen Anwendungen unerstützt wird.
+=> Http
+=> JSON / XML => Programmiersprachenunabhängig
+
+## Rest als Beschreibungsformat
+Rest ist keine Architektur, sondern ein Rahmen für einen Architekturstil!
+> Häufig Client/Server Architektur auf Basis von HTTP als Trägerprotokoll
+>> RESTful HTTP
+
+**Rest schreibt kein Protokoll vor, wird aber i.d.R mit HTTP verwendet**
+
+## Exkurs HTTP
+
+HTTP ist ein einfaches Textbasiertes Client-Server-Protokoll
+
+GET, POST, PUT, DELETE, etc. => HTTP Aufrufe
+
+Rest kennt nur Ressourcenbegriff
+Ressource ist alles auf das zugegriffen oder verändert werden kann
+
+## Fünf Prinzipien von REST
+1. Ressourcen besitzen eine eindeutige ID (adressable ressources)
+    - Bei RESTful HTTP sind das URLs
+2. Ressourcen können unterschiedliche Repräsentationen besitzen
+    - Bei RESTful HTTP ist das oft JSON oder XML
+3. Standartisierte Methoden
+    - Bei RESTful HTTP sind das die HTTP-Methoden GET, POST, PUT, DELETE
+4. Statuslose Kommunikation
+    - HTTP ist zustandslos
+5. Hypermediaverwendung
+    - Hypermedia As The Engine Of Application State (HATEOAS)
+    - Ressourcen können verknüpft werden über Links
+    - Wird von den meisten REST-Anwendungen nicht verwendet
+
+## Architekturprinzip: Adressierbarkeit
+
+Adressierung über URI
+
+=> Adressierung über HTTP
+http://example.com/kunde?name=Harry&pls=66482
+
+
+Da jeses Objekt eine URI besitzt, können Ressourcen verlinkt werden (JSON-FORMAT)
+```{json}
+{
+    "name": "Luke Skywalker",
+    "hair_color": "blond",
+    "homeworld": "https://swapi.dev/api/planets/1/",
+    "films": [
+        "https://swapi.dev/api/films/2/",
+        "https://swapi.dev/api/films/6/",
+        "https://swapi.dev/api/films/3/",
+        "https://swapi.dev/api/films/1/",
+        "https://swapi.dev/api/films/7/"
+    ]
+}
+```
+
+## Repräsentationen
+
+Ressource ist eine Abstraktion, von der bei Bedarf eine Repräsentation erzeugt wird
+```{json}
+{
+    'name' : 'Albert'
+    'id' : '42'
+}
+```
+> Repräsentation einer Person durch ID und Name
+
+## Repräsentationsanforderung
+Clients können über URLs Ressourcen identifizieren und übebr HTTP-Methoden abrufen
+Clients geben in der Regel die Repräsentationsform an, die sie erwarten
+
+
+## Standartisierte Methoden
+
+**GET, POST, DELETE sind idempotent**
+**Nur POST ist nicht idempotent**
+
+Idempotent => Hat einmal eine Wirkung, beim zweiten mal jedoch keine
+> Beispiel |-3| = 3 => ||-3|| = 3 => Der zweite Betrag hat keine Wirkung
+
+Als Daumenregel gilt für CRUD(Create, Read, Update, Delete)
+<table>
+    <th>Aktion auf der Ressource</th>
+    <th>HTTP-Methode</th>
+    <th>RPC-Style Schnittstelle</th>
+    <td>RESTful HTTP</th>
+    <tr>
+        <td>CREATE</td>
+        <td>POST</td>
+        <td>addBook()</td>
+        <td>POST /books</td>
+    </tr>
+    <tr>
+        <td>READ</td>
+        <td>GET</td>
+        <td>getBooks()</td>
+        <td>GET /books</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td>getAuthorsFromBook()</td>
+        <td>GET /books/{id}/authors</td>
+    </tr>
+    <tr>
+        <td>UPDATE</td>
+        <td>PUT bzw. PATCh</td>
+        <td>updateBook()</td>
+        <td>PUT /books/{id}</td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>DELETE</td>
+        <td>deleteBook()</td>
+        <td>DELETE /books/id{id}</td>
+    </tr>
+</table>
+
+
+## Statuscodes
+
+## Richardson Maturity Model
+Kathegorieren klassifizieren RESTful-Anwendungen nach Reifegrad
+
+Level 0: Benutzt lediglich HTTP als Transportprotokoll
+
+## Hypermedia 
+Hypermedia = Hypertext + Multimedia
+
+## Best Practices 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 # Wahrscheinlich nicht Prüfungsrelevant aber interessant
 API-Gateway = Früher. Session Dispatcher => Verteilt API-Anfragen auf die verteilten Backend-Dienste.
 
