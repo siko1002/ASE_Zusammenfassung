@@ -1443,6 +1443,72 @@ Hypermedia = Hypertext + Multimedia
 
 
 
+# Microservices
+
+Vorteile: Skalierbarkeit, Geschwindigkeit, Kopplung, etc.
+
+Nachteile: Automatisches Build- und Deployment notwendig, Komplexe Infrastruktur und Runntime (Cloud) notwendig
+
+## Typisches Implementierungsszenario für Produkt am Beispiel Monolith
+
+Benutzung CI-Pipeline
+
+Bild Folie 4  
+
+## Conways Law
+
+
+
+## Definition Microservices
+Architekturstil bei der Anwendung in kleine Teile aufgeteilt wird, die unabhängig voneinander entwickelt werden und installiert werden
+
+Bild Folie 23
+
+## Technische Kommunikation 
+
+Bild Folie 24
+
+### Microservice Kooperation
+
+Bild folie 25
+
+## Skalierungsmöglichkeiten
+
+Bild Folie 26
+
+Daraus resultiert CAP-Theorem 
+
+## The Twelve Factors
+=> Wichtig für Cloud Anwendungen => Je mehr erfüllt sind desto solider die Anwendung
+
+
+IX => Container werden weggeschmissen sobald sie nicht mehr gebraucht werden
+
+## Evolution 
+
+Bild Folie 31 => Sehr spannend 
+
+Matschball wird in Module unterteilt => danach werden Daten getrennt => Zuletzt werden Module und DBs geschnitten
+
+
+## Service als hexagonale Architektur
+
+Man nutzt REST für Benutzer und Queues für die Services untereinander
+Bsp. MQTT , ActiveMQ oder Kafka
+
+## API-Gateway
+
+Verteilerschnittstelle / Zentrale Schnittstelle, welche auf die anderen Schnittstellen zugreift
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1480,8 +1546,13 @@ Hypermedia = Hypertext + Multimedia
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
 # Wahrscheinlich nicht Prüfungsrelevant aber interessant
 API-Gateway = Früher. Session Dispatcher => Verteilt API-Anfragen auf die verteilten Backend-Dienste.
+
+
+
+Dispatcher oder Gateway => Verantwortlich für die Verteilung der Last auf die verschiedenen Server
 
 ## Praktische Begriffe
 Resilient = Wiederstandsfähig
