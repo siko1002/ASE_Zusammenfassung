@@ -1345,7 +1345,12 @@ Ressource ist alles auf das zugegriffen oder verändert werden kann
 Adressierung über URI
 
 => Adressierung über HTTP
-http://example.com/kunde?name=Harry&pls=66482
+http://example.com/kunde?name=Harry&plz=66482
+
+- ```http``` entspricht Protokoll
+- Standart Port ist 80
+- ```Kunde``` entspricht Ressource bzw. Prad zu Ressource
+- ```name=Harry&plz=66482``` ist der Query-String
 
 
 Da jeses Objekt eine URI besitzt, können Ressourcen verlinkt werden (JSON-FORMAT)
@@ -1375,10 +1380,14 @@ Ressource ist eine Abstraktion, von der bei Bedarf eine Repräsentation erzeugt 
 ```
 > Repräsentation einer Person durch ID und Name
 
-## Repräsentationsanforderung
+### Repräsentationsanforderung
 Clients können über URLs Ressourcen identifizieren und übebr HTTP-Methoden abrufen
 Clients geben in der Regel die Repräsentationsform an, die sie erwarten
-
+```
+GET products/143 HTTP/1.1
+Host: www.example.com
+Accept: application/xml, application/json => Repräsentationsform, welche akzeptiert wird
+```
 
 ## Standartisierte Methoden
 
@@ -1428,18 +1437,62 @@ Als Daumenregel gilt für CRUD(Create, Read, Update, Delete)
 
 
 ## Statuscodes
+Der Server kann durch HTTP-Statuscodes Informationen an den Client zurückgeben
+
+|Statuscode | Wirkungsbereich |
+|:---:|---|
+|1xx    |   dient Informationszwecken und signalisiert, dass die Bearbeitung noch nicht abgeschlossen ist|
+|2xx    |   signalisiert, dass die Bearbeitung erfolgreich abgeschlossen wurde
+|3xx    |   Zeigt Umleitungen an
+|4xx    |   wird für Client-seitige Fehler benutzt
+|5xx    |   signalisieren Fehler, die bei der Bearbeitung der Anfrage auf dem Server aufgetreten sind.
+
+### Wichtige Statuscodes
+
+<img src="Bilder/REST_Wichtige_HTTP_Statuscodes.png" width=400>
+
 
 ## Richardson Maturity Model
 Kathegorieren klassifizieren RESTful-Anwendungen nach Reifegrad
 
-Level 0: Benutzt lediglich HTTP als Transportprotokoll
+<img src="Bilder/REST_Richardsons_Maturity_Model.png" width=300>
+
+- Level 0
+    - Http als Transportprotokoll
+
+- Level 1
+    - Ressourcen-Begriff wird verwendet => Ressourcen über eindeutige URLs angesprochen
+    
+- Level 2
+    - HTTP-Befehle werden für CRUD verwendet
+- Level 3
+    - HATEOAS => Ressourcen sind über Links verbunden und "selbstbeschreibend"
 
 ## Hypermedia 
 Hypermedia = Hypertext + Multimedia
+Links zur Verknüpfung verschiedener Medien
+
+
+# REST als Architekturstil
+
+- Definiert die Anwendung als ein System verteilter Ressourcen, welche über Links miteinander verbunden sind.
+- Im Zentrum einer REST-API stehen die Ressourcen, welche über URLs identifizierbar(über Links erreichbar) sind.
+- Um Ressource zu verändern muss Repräsentation der Ressource verändert an diese geschickt werden.
 
 ## Best Practices 
-
-
+1. Nomen für Ressourcen im Plural
+    - ``` /vehicles => Fahrzeuge ```
+    - ```/vehicles/12 => Fahrzeug nummer 12 ```
+2. Keine Verben in URLs
+    - ``` /getColor ``` Schlecht
+    - ``` /color ``` Gut
+3. Kein / am Ende
+    - ``` /vehicles/data/power/ ``` Schlecht
+    - ``` /vehicles/data/power ```Gut
+4. Vorsicht bei Verwendung von Trennzeichen
+    - ``` /testAPI/dasIstNixGut ``` Schlecht
+    - ``` /testAPI/das_ist_nix_gut ``` Schlecht
+    - ``` /testAPI/das-ist-okay ``` Gut
 
 
 
