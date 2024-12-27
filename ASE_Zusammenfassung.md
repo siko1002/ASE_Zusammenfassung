@@ -1473,7 +1473,7 @@ Hypermedia = Hypertext + Multimedia
 Links zur Verknüpfung verschiedener Medien
 
 
-# REST als Architekturstil
+## REST als Architekturstil
 
 - Definiert die Anwendung als ein System verteilter Ressourcen, welche über Links miteinander verbunden sind.
 - Im Zentrum einer REST-API stehen die Ressourcen, welche über URLs identifizierbar(über Links erreichbar) sind.
@@ -1506,42 +1506,88 @@ Nachteile: Automatisches Build- und Deployment notwendig, Komplexe Infrastruktur
 
 Benutzung CI-Pipeline
 
-Bild Folie 4  
+<img src="Bilder/Microservices_CICD_Pipeline.png" width=400>
 
 ## Conways Law
 
+*Any organization that designs a system (defined more broadly here than just information systems) will inevitably produce a design whose structure is a copy of the organization’s communication structure.* - Melvin Conway: “How Do Committees Invent?,” Datamation, April 1968
+
+> In Simpel: Die Struktur einer Organisation spiegelt sich in den Systemen wider, die sie entwickelt.
+>> Wie ein Team organisiert ist und miteinander kommuniziert, beeinflusst direkt, wie die von diesem Team entwickelten Produkte und Systeme aussehen.
+
+## Teamrollen in Microservices 
+
+|Klassisch |Microservices|
+|-----|-----|
+| <img src="Bilder/Microservices_Klassische_Teams.png"> | <img src="Bilder/Microservices_Teamaufteilung_Microservices.png">
 
 
 ## Definition Microservices
 Architekturstil bei der Anwendung in kleine Teile aufgeteilt wird, die unabhängig voneinander entwickelt werden und installiert werden
 
-Bild Folie 23
+<img src="Bilder/Microservices_Definition_Microservices.png" width=400>
 
 ## Technische Kommunikation 
 
-Bild Folie 24
+Ein Microservice stellt seine Funktionalität über eine REST-API und/oder ein Topic zur Verfügung.
 
-### Microservice Kooperation
-
-Bild folie 25
+<img src="Bilder/Microservices_Technische_Kommunikation.png" width=300>
 
 ## Skalierungsmöglichkeiten
 
-Bild Folie 26
+<img src="Bilder/Microservices_Skalierungsmöglichkeiten.png" width=400>
 
 Daraus resultiert CAP-Theorem 
 
 ## The Twelve Factors
-=> Wichtig für Cloud Anwendungen => Je mehr erfüllt sind desto solider die Anwendung
 
+Definiert Best Practices für Anwendungen
+|Nr|Beschreibung|Definition|
+|-----|-----|-----|
+|1  |   Codebase                    |   Eine im Versionsmanagementsystem verwaltete Codebase, viele Deployments
+|2  |   Abhängigkeiten              |   Abhängigkeiten explizit deklarieren und isolieren
+|3  |   Konfiguration               |   Die Konfiguration in Umgebungsvariablen ablegen
+|4  |   Unterstützende Dienste      |   Unterstützende Dienste als angehängte Ressourcen behandeln
+|5  |   Build, release, run         |   Build- und Run-Phase strikt trennen
+|6  |   Prozesse                    |   Die App als einen oder mehrere Prozesse ausführen
+|7  |   Bindung an Ports            |   Dienste durch das Binden von Ports exportieren
+|8  |   Nebenläufigkeit             |   Mit dem Prozess-Modell skalieren
+|9  |   Einweggebrauch              |   Robuster mit schnellem Start und problemlosen Stopp
+|10 |   Dev-Prod-Vergleichbarkeit   |   Entwicklung, Staging und Produktion so ähnlich wie möglich halten
+|11 |   Logs                        |   Logs als Strom von Ereignissen behandeln
+|12 |   Admin-Prozesse              |   Admin/Management-Aufgaben als einmalige Vorgänge behandeln
 
-IX => Container werden weggeschmissen sobald sie nicht mehr gebraucht werden
+=> Wichtig für Cloud Anwendungen
+=> Je mehr erfüllt sind desto solider die Anwendung
 
 ## Evolution 
 
-Bild Folie 31 => Sehr spannend 
+<img src="Bilder/Microservices_Entwicklung_Monolith_zu_Microservice.png" width=500>
 
-Matschball wird in Module unterteilt => danach werden Daten getrennt => Zuletzt werden Module und DBs geschnitten
+1. Matschball wird in Module unterteilt
+2. Trennung von Daten
+3. Module udn DBs werden geschnitten 
+
+## Definition Microservice
+
+Das Konzept der Microservices basiert auf der Idee, Anwendungen in kleinere, unabhängig voneinander arbeitende Dienste aufzuteilen. Dies ermöglicht flexibleres Entwickeln und Bereitstellen von Anwendungen, stellt jedoch keine universelle Lösung dar.
+
+### Vorteile
+
+▪ Ermöglicht die kontinuierliche Bereitstellung und den Einsatz großer, komplexer Anwendungen.
+▪ Dienste sind klein und leicht zu warten.
+▪ Dienste können unabhängig voneinander bereitgestellt werden.
+▪ Dienste sind unabhängig skalierbar.
+▪ Ermöglicht es Teams, autonom zu arbeiten.
+▪ Ermöglicht ein einfaches Experimentieren und die Übernahme neuer Technologien.
+▪ Bietet eine bessere Fehlerisolierung.
+
+### Nachteile
+
+▪ Es ist eine Herausforderung, die richtigen Dienste zu finden.
+▪ Verteilte Systeme sind komplex, was die Entwicklung, das Testen und die Bereitstellung erschwert.
+▪ Die Bereitstellung von Funktionen, die mehrere Dienste umfassen, erfordert eine sorgfältige Koordination.
+▪ Die Entscheidung, ob und wann die Microservice-Architektur eingeführt werden soll, ist schwierig.
 
 
 ## Service als hexagonale Architektur
@@ -1549,9 +1595,21 @@ Matschball wird in Module unterteilt => danach werden Daten getrennt => Zuletzt 
 Man nutzt REST für Benutzer und Queues für die Services untereinander
 Bsp. MQTT , ActiveMQ oder Kafka
 
+<img src="Bilder/Microservices_hexagonale_Architektur.png" width=300>
+
+Besteht aus Business-Logik, einem oder mehreren Adaptern, welche Schnittstellungen zu externen Anwendungen und anderen Diensten bilden.
+
 ## API-Gateway
 
-Verteilerschnittstelle / Zentrale Schnittstelle, welche auf die anderen Schnittstellen zugreift
+Ein API-Gateway beschreibt eine Verteilerschnittstelle / Zentrale Schnittstelle, welche auf die anderen Schnittstellen zugreift.
+
+Ein API-Gateway kann eine mehrschichtige modulare Architektur besitzen. Die gemeinsame Schicht implementiert Funktionen, die allen APIs gemeinsam sind, z.B. Authentifizierung
+
+<img src="Bilder/Microservices_API_Gateway.png" width=400>
+
+### Single Entry Point Gateway-API
+
+<img src="Bilder/Microservices_API_Gateway_Single_Entry_Point.png" width=400>
 
 
 
@@ -1597,7 +1655,8 @@ Verteilerschnittstelle / Zentrale Schnittstelle, welche auf die anderen Schnitts
 
 
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 # Wahrscheinlich nicht Prüfungsrelevant aber interessant
