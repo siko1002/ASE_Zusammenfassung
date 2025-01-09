@@ -1613,19 +1613,61 @@ Ein API-Gateway kann eine mehrschichtige modulare Architektur besitzen. Die geme
 
 
 
+# Domain Driven Design (DDD)
+
+Software ist in einer Anwendungsdomäne verankert
+
+Domain Driven Design = Vorgehensweise zur Modellierung komplexer Software
+Fokus
+- Fachlichkeit und Fachlogik
+- Anwendungsdomäne
+
+
+## Strategisches Design
+Strategisches Design = Bounded Context, Kommunikation zwischen Bounded Contexten
+
+## Taktisches Design
+Taktisches Design = Wie sieht so ein Bounded Context aus
+
+## Begriffe
 
 
 
 
 
+Collaborative Modellierung
+
+Domain Driven Design
+
+Architekturkonzepte 
+
+Anticorruptionlayer = Adapter
 
 
+Open-Host Service = REST-Schnittstelle
 
+PL (Public Language) = JSON oder XML
 
+RPC = Sowas wie RMI oder SOAP
 
+## Wichtige Begriffe 
+Bounded Context
+Util
+Strategisches Design = Bounded Context, Kommunikation zwischen Bounded Contexten
+Taktisches Design = Wie sieht so ein Bounded Context aus
+Repository = Datenbank
+Value Object = DTO => Datenhalter/Datenobjekte
 
+Entity = Model
 
+Abstraktion = Fachsprache
 
+Invarianten = Schützen vor illegalen Zuständen => 
+Bsp. Artikel darf erst versendet werden wenn alle Bestellungen verarbeitet wurden => Doppelbuchungen vermeiden.
+
+**Erinnerung: Eventually Consistent heißt nicht Eventuell Konsistent sondern irgendwann Konsistent**
+
+### DDD ist sehr wichtig lernen !!!
 
 
 
