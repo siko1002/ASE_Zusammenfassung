@@ -1615,59 +1615,151 @@ Ein API-Gateway kann eine mehrschichtige modulare Architektur besitzen. Die geme
 
 # Domain Driven Design (DDD)
 
-Software ist in einer Anwendungsdomäne verankert
 
-Domain Driven Design = Vorgehensweise zur Modellierung komplexer Software
-Fokus
-- Fachlichkeit und Fachlogik
-- Anwendungsdomäne
+Domain Driven Design beschreibt eine Vorgehensweise zur Modellierung komplexer Software im Großen und im Kleinen. Das Ziel hierbeit ist es Softwarelösungen im Einklang mit den Fachdomänen zu entwickeln. Ein Hauptmerkmal ist die Verwendung einer einheitlichen Sprache (ubiquitous language), welche von Fachexperten genutzt wird, durch welche Später die Bounded Contexts erstellt werden können.
+> Software ist in einer Anwendungsdomäne verankert d.h. Im Kontext einer Bankanwendung geht es bsp. fachlich um Geld, Kredite oder Aktien.
+
+
+> Jede Abteilung hat eigene Sicht auf die Komponenten und Akteure der Software. => Eigene Fachsprache
+
+**Im Zentrum steht der Bounded Context**
+
+
+## Ablauf Softwareentwicklung
+
+*"There is no sense in talking about the solution before we agree on the problem,
+and no sense talking about the implementation steps before we agree on the
+solution."* - Efrat Goldratt-Ashlag
+
+> In verständlich: Erst wenn die Anforderungen genau definiert sind lohnt es sicht ein Fachmodell zu entwickeln und erst dann sollte die Zielarchitektur geplant werden.
+
+<img src="Bilder/DDD_Ablauf_Softwareentwicklung.png">
+
+
+## Arten von Komplexität
+
+1. Essentielle Komplexität
+    - Innenwohnende Komplexität der Fachdomäne => Software für eine komplexe Domäne ist zwangsläufig komplex
+    - Software für ein komplexes Bankensystem wird unwahrscheinlich simpel ausfallen
+2. Akzidentelle Komplexität
+    - Ensteht zufällig durch:
+        - Misverständnissen bei Analyse der Fachdomäne
+        - Schlechtes Design / schlechte Architektur
+        - Einsatz von unpassender oder veralteter Technologie
+        - Sachen bauen, die nicht benötigt werden (Unnötige Fancy Lösungen etc.)
+
+
+|Arten von Komplexität|Entscheidungs- / Einflussbereiche|
+|-----|-----|
+| <img src="Bilder/DDD_Arten_von_Komplexität.png" width=400>| <img src="Bilder/DDD_Entscheidungs_Einflussbereiche_von_Komplexität.png" width=400> |
 
 
 ## Strategisches Design
-Strategisches Design = Bounded Context, Kommunikation zwischen Bounded Contexten
+Strategisches Design = Definiert die Bounded Contexte und Kommunikation zwischen diesen
+> Beschäftigt sich mit dem Großen ganzen (Kontext Mapping , Zusammenarbeit zwischen Teams)
+
+Aufteilung der Fachdomäne in einzelne disjunkte Bounded Contexts
+
+Jeder Context nutzt eigene, der Anwendung entlehnte Sprache (**Ubiquitous Language**)
+Die Begriffe dieser Sprache sollten sowohl im Gespräch als auch in den Klassendiagrammen als auch im Sourcecode auftauchen.
+
+### Bounded Context
+Der Bounded Context führt einen "geschützten" Raum ein mit einem vollständigen Fach- bzw. Prozessmodell und einer in dem Bereich "gesprochenen" (benutzten) Sprache.
+=> Bounded Context repräsentiert abgeschlossenes vollständiges System
+
+<img src="Bilder/DDD_Bounded_Context.png" width=400>
+
+Architekturmodell für einen Bounded Context
+
+<img src="Bilder/DDD_Hexagonal_Architekturmodell_fuer_Bounded_Context.png" width=400>
+
+- Architekturkonzepte = Technologische Lösungskonzepte wie bsp. Software-Architekturen
+
+### Context Mapping
+
+Teil des Strategischen Designs bei dem die Beziehungen der zuvor definierten Bounded Contexts definiert werden.
+
+>Context Mapping = definiert Beziehungen und Datenaustausch zwischen den Bounded Contexts
+>Faustregel: Ein fachlicher Kontext soll nur zu einem Team gehören, ein Team kann aber mehrere Kontexte besitzen.
+
+Beim Context-Mapping steht Form der Zusammenarbeit zwischen den Teams im Vordergrund:
+| Form der Zusammenarbeit |Bild|Beschreibung |
+|---|---|---|
+|Partnership| <img src="Bilder/DDD_Context_Mapping_Partnership.png" width=400> |Beide Teams sind voneinander Abhngig und können nur gemeinsam zum Ziel kommen. <br/> Verwenden i.d.R. CI
+|Shared Kernel | <img src="Bilder/DDD_Shared_Kernel.png" width=400>|Beteiligte Teams teilen sich einen Teil des Modells | 
+|Customer-Supplier | <img src="Bilder/DDD_Customer_Supplier.png" width=400> | Ein Team (Customer) ist direkt von einem anderen Team (Supplier) abhängig <br/>Supplier kann auf Bedürfnisse des Customer eingehen<br/> Supplier bestimmt letzendlich was Cusomer erhält (Up-Down-Stream-Verhältnis)
+|Conformist| <img src="Bilder/DDD_Conformist.png" width=400> | Spezialfall des Customer-Supplier-Mappings <br/>Customer hat keine Möglichkeit auf Supplier einzuwirken => Übernimmt Module 1zu1
+|Anticorruption Layer| <img src="Bilder/DDD_Anticorruption_Layer.png" width=400> | Defensive Mapping-Art <br/>Downstream-Team baut "Übersetzungsschicht"(Adapter) um Sprache von Upstreamteam in eigene zu übersetzen
+|Open Host Service| <img src="Bilder/DDD_Open_Host_Service.png" width=400> | Customer-Supplier-Mappings <br/>Upstream-Team stellt Schnittstelle(API) bereit, über die Informationen abgerufen werden können <br/> In der heutigen Zeit: OHS = API
+|Published Language| <img src="Bilder/DDD_Published_Language.png" width=400> | Spezialisierung OHS <br/> Upstream-Team stellt Schnittstelle zum definierten Dokumentaustausch bereit.
+|Seperate Ways| <img src="Bilder/DDD_Seperate_Ways.png" width=400> | Jedes Team entwickelt eigene Funktionalität => Häufig nicht rentabel, da viel Code doppelt gebaut werden muss
 
 ## Taktisches Design
+
+Das taktische Design beschäftigt sich damit das Innere der Bounded Contexts zu definieren.
 Taktisches Design = Wie sieht so ein Bounded Context aus
+> Beschäftigt sich mit der Modellierung innerhalb eines Bounded Contexts
+=> Entwurf und Aufbau eines Bounded Contexts
+- Zentrales Konstrukt: Aggregates
+    - Bestandteile: Entities, Value Objects 
+- Außerdem
+    - Services, Repositories (DBs), Factories
 
-## Begriffe
+### Aggregats
 
+Ein Agregate besteht aus einem oder mehreren Entities und kann auch Value Objects enthalten
+- Entity = Sache, welcher eindeutige ID zugewiesen ist
+    - Kann geändert werden
+- Value Object = Wert der nicht veränderbar ist
+    - Besitzt keine ID
+    - Beschreibung einer Sache
 
+Aggregates repräsentieren einen "Zusammenhang", besitzen somit auch Mutationsfunktionalität
+- Anemic Aggregates (Bestehen nur aus getter/setter) sollen vermieden werden
 
+Es gelten folgende vier Regeln für den Entwurf von Aggregaten
+1. Schütze fachliche Invarianten innerhalb von Aggregat-Grenzen
+    - Aufbau eines Aggregates muss aus den Geschäftsregeln abgeleitet sein
+2. Aggregate sollten "klein" sein
+    - Große Aggregate führen leicht zu Konflikten oder Inkonsistenten
+3. Andere Aggregate sollten nur über IDs referenziert werden
+    - Alle Aggregate referenzieren das zugehörige Produkt über dessen ID => keine direkten Referenzen!
+    - Dadurch soll das unbeabsichtigte Ändern eines Produkts verhindert werden
+4. Andere Aggregate werden unter Verwendung von Eventual Consistency geändert
+    - **Erinnerung: Eventually Consistent heißt nicht Eventuell Konsistent sondern irgendwann Konsistent**
+    - Andere Aggregate werden unter Verwendung von Eventually Consistency geändert
 
+=> CQS-Designprinzip kann helfen
 
-Collaborative Modellierung
+### Command Query Responsibility Segregation (CQS)
+Aufteilung des Domänenmodells: Anderungen und Abfragen arbeiten auf zwei verschiedenen Repositorien(DBs)
+Queries = Lesende Zugriffe
+- Lesen nur aus der Datenbank
+Commands = Schreibende Zugriffe
+- Das Command löst ein Event aus, welches die Lesedatenbank (irgendwann) aktualisiert
+<img src="Bilder/DDD_CQRS.png" width=400>
 
-Domain Driven Design
+> Dies wird häufig beim Event Sourcing verwendet 
 
-Architekturkonzepte 
-
-Anticorruptionlayer = Adapter
-
-
-Open-Host Service = REST-Schnittstelle
-
-PL (Public Language) = JSON oder XML
-
-RPC = Sowas wie RMI oder SOAP
+## Collaborative Modeling
+ Collaborative Modeling = Anforderungsermittlung, identifiziert Geschäftsprozesse, Rollen und Arbeitsgegenstände im Problemraum
+- z.B. Domain Story Telling
 
 ## Wichtige Begriffe 
-Bounded Context
-Util
-Strategisches Design = Bounded Context, Kommunikation zwischen Bounded Contexten
-Taktisches Design = Wie sieht so ein Bounded Context aus
+Anticorruptionlayer = Adapter
+Open-Host Service = REST-Schnittstelle
+PL (Public Language) = JSON oder XML
+RPC = Sowas wie RMI oder SOAP
 Repository = Datenbank
 Value Object = DTO => Datenhalter/Datenobjekte
-
 Entity = Model
-
 Abstraktion = Fachsprache
 
-Invarianten = Schützen vor illegalen Zuständen => 
-Bsp. Artikel darf erst versendet werden wenn alle Bestellungen verarbeitet wurden => Doppelbuchungen vermeiden.
+Invarianten = Schützen vor illegalen Zuständen
+>Bsp. Artikel darf erst versendet werden wenn alle Bestellungen verarbeitet wurden => Doppelbuchungen vermeiden.
 
-**Erinnerung: Eventually Consistent heißt nicht Eventuell Konsistent sondern irgendwann Konsistent**
 
-### DDD ist sehr wichtig lernen !!!
+
 
 
 
