@@ -1758,12 +1758,36 @@ Abstraktion = Fachsprache
 Invarianten = Schützen vor illegalen Zuständen
 >Bsp. Artikel darf erst versendet werden wenn alle Bestellungen verarbeitet wurden => Doppelbuchungen vermeiden.
 
+# Einführung Softwarearchitekturen
+
+Softwarearchitektur hat keine allgemeine Definition
+
+Softwarearchitekt sollte Projekt komplett begleiten
+
+- Analyse von Geschäftsanforderungen
+- Festlegung der architektonischen Merkmalen ("Fähigkeiten")
+- Auswahl von Architekturmustern und -stilen
+- Erstellung von Komponenten (die Bausteine des Systems)
+
+
+
+## Definition nach iSAQB
+"*Softwarearchitektur definiert die grundlegenden Prinzipien und Regeln für die Organisation eines Systems, dessen Strukturierung in Bausteinen und Schnittstellen sowie deren Beziehungen zueinander wie auch zur Umgebung.*"
 
 
 
 
+## Bausteine / Bauteile
+Baustein bietet Schnittstellen an, die er im Sinne eines Vertrages garantiert.
+Baustein / Software Modul / Software Komponente 
 
+### Schnitstellen 
 
+### Modularisierung 
+
+### Entwurfstechniken 
+
+## Architekturbeschreibung 
 
 
 
