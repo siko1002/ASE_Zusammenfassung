@@ -1769,29 +1769,152 @@ Softwarearchitekt sollte Projekt komplett begleiten
 - Auswahl von Architekturmustern und -stilen
 - Erstellung von Komponenten (die Bausteine des Systems)
 
+|Architekt | Entwickler |
+| --- | --- |
+|Architekten sollten ein breites Wissen besitzen | Entwickler sollten ein tiefes Wissen Besitzen |
+
+<img src="Bilder/SA_Wissenspyramide.png" width=400>
+
+## Qualitätsattribute
+Software-Bewertung nach Qualitätsattributen (*itility)
+
+<img src="Bilder/SA_Qualitaetsattribute.png" width=400>
 
 
 ## Definition nach iSAQB
 "*Softwarearchitektur definiert die grundlegenden Prinzipien und Regeln für die Organisation eines Systems, dessen Strukturierung in Bausteinen und Schnittstellen sowie deren Beziehungen zueinander wie auch zur Umgebung.*"
 
+Dadurch Richtlinien für den gesamten Systemlebenszyklus.
 
-
-
-## Bausteine / Bauteile
+## Baustein / Software Modul / Software Komponente 
 Baustein bietet Schnittstellen an, die er im Sinne eines Vertrages garantiert.
-Baustein / Software Modul / Software Komponente 
+
+Garantie gilt erst, wenn die benötigten Schnittstellen im Rahmen einer Konfiguration zur Verfügung gestellt werden(Export- und Import-Schnittstellen).
+
+<img src="Bilder/SA_Metamodell_Baustein.png" width=400>
+
+Ein (Super-)Baustein kann aus anderen (Sub-)Bausteinen bestehen und deren Beziehungen implementieren.
 
 ### Schnitstellen 
 
+Eine Schnittstelle repräsentiert einen Zugangspunkt zu einem System oder dessen Baustein. Dabei beschreibt die Schnittstelle die Eigenschaften des Zugangspunktes (Attribute, Daten oder Funktionen).
+
+Ziel ist es diese Eigenschaften möglichst präzise mit allen notwendigen Aspekten zu definieren wie z.B.:
+- Syntax
+- Datenstrukturen
+- funktionales Verhalten
+- Fehlerverhalten
+- nichtfunktionale Eigenschaften
+- Nutzungsprotokolle der Schnittstelle
+- Technologien
+- Randbedingungen
+- Semantik
+
+|Komponente und Schnittstellen | Wem gehört die Schnittstelle
+| --- | --- |
+|<img src="Bilder/SA_Komponente_und_Schnittstelle.png" width=400>| <img src="Bilder/SA_Wem_gehört_die_Schnittstelle.png" width=400> |
+
 ### Modularisierung 
+Modularisierung = Zerlegung eines Systems in Teilsysteme (Bausteine)
 
-### Entwurfstechniken 
+Ziele
+- Beherrschbarkeit von Komplexität
+- Bessere Erweiterung und Wartbarkeit
+- Bessere Veränderung
+- Größere Wiederverwendbarkeit durch Rekombination von Modulen
 
-## Architekturbeschreibung 
+Modul = Zusammenfassung von Operationen und Daten zur Realisierung einer abgeschlossenen Aufgabe
+- Realisiert Geheimnisprinzip (Information Hiding)
+- Single-Responsibility-Prinzip
+
+Außenwelt kommuniziert über eindeutig definierte Schnittstelle mit dem Baustein (Exportschnittstelle)
+- Exportschnittstelle gibt an, welche Operationen und Daten anderen Module zur Verfügung gestellt werden
+
+Modul/Baustein hängt i.d.R von anderen Modulen ab (Importschnittstelle)
+- Importschnittstelle gibt an, welche Operationen und Daten von anderen Modulen benötigt werden
+
+## Entwurf von Softwarearchitekturen
+
+Struktur von Software degeneriert mit der Zeit zu "verfaultem" Design.
+Sympthome von "verfaultem" Design:
+- Starrheit = Änderungen sind schwierig und führen zu Modifikationen an einer Vielzahl von Komponenten bzw. Klassen
+- Zerbrechlichkeit = Änderungen an einer Stelle führen zu Fehlern an ganz anderen Stellen
+- Schlechte Wiederverwendbarkeit = Komponenten besitzen viele Abhängigkeiten von Programmteilen, welche im neuen Kontext nicht benötigt werden
 
 
+### Grundsätze
 
+1. Stakeholder beurteilt Erfolg einer Lösung => Software ist nur gut wenn der Kunde zufrieden ist
+2. Einfachheit gewinnt (KISS)
+3. Es gibt kein Patentrezept zur Lösung beliebiger Probleme => Wie gut etwas ist wird sich erst mit der Zeit herausstellen
+4. Voraussetzungen und Annahmen sollten explizit sein => Wenn etwas für mich klar ist muss es nicht für den Gegenüber klar sein
+5. Erwarte Änderungen und Fehler!
 
+### Grundprinzipien
+
+- Strebe nach loser Kopplung
+    - Kopplung durch Aufruf (Funktionsaufruf)
+    - Kopplung durch Benachrichtigungen (Events o.ä.)
+    - Kopplung durch Erzeugung
+    - Kopplung durch Daten/Datenstrukturen
+    - Kopplung über Zeit
+- Strebe nach Kohäsion (Dichte des Bauteils => Zeigt wie gut Baustein ist)
+- Trenne Verantwortlichkeiten
+- Zerlege Systeme in Module => Modul = in sich geschlossener Baustein
+- Nutze Abstraktion, Kapselung und Geheimnisprinzip
+- Lösung soll konsistent sein (Nicht 4 verschiedene JSON-Parser sondern einer, welcher Projektweit genutzt wird)
+- Vermeide Redundanz (DRY)
+- Vermeide Zyklische Abhängigkeiten
+> Beachte SOLID
+
+### Wichtige Design-Pattern (für Architektur)
+- Adapter
+- Observer und MVC
+- Decorator
+- Proxy
+- Fassade
+- State
+- Mediator (Bsp. API-Gateway/Broker)
+
+## Beschreibung und Kommunikation von Software-Architekturen
+
+| Darstellungsart | Beschreibungsmittel | Inhalt |
+| --- | --- | --- |
+| Kontextsicht(Kontextabgrenzung)| UML oder Kompositionsdiagramme evtl. Paketdiagramm <br> Listen von Nachbarsystemen und deren Schnittstellen | Inhalt = Beziehungen und Zusammenhänge mit dem Umfeld
+|Bausteinsicht |UML-Komponenten und -Paketsymbole evtl. high Level Klassendiagramme|Statische Strukturen eines Softwaresystems <br>Beziehungen zwischen Bausteinen|
+|Laufzeitsicht|UML-Aktivitätsdiagramme, -Kommunikationsdiagramme und -Sequenzdiagramme <br>evtl. Flussdiagramme, BPMN-Modelle|Zusammenwirken der Bausteine zur Laufzeit<br>Beziehungen zwischen Bausteinen|
+|Verteilungs- und Infrastruktursicht|UML-Deploymentdiagramme<br>evtl. UML-Paket und -Komponentendiagramme|Technische Ablaufumgebung<br>Beziehungen zwischen Bausteinen|
+
+## Bewertung von Softwarearchitekturen
+
+### Qualitative Bewertung
+
+ISO-Normen definieren Softwarequalität anhand von Merkmalen
+
+<img src="Bilder/SA_ISO_Softwarequalitaet.png" width=600>
+
+Beispiel für eine Solche Bewertung ist ATAM(Architecture Tradeoff Analysis Method)
+
+<img src="Bilder/SA_ATAM_Ablauf.png" width=400>
+
+Weitere Verfahren:
+- Technicher Durchstich (Klärung technischer Fragen)
+- Prototypen
+    - Wegwerfprototyp
+    - Analyseprototyp (Proof of Concept)
+    - Labormuster (Experiment zur Klärung konstruktionsbezogener Fragen)
+    - Pilotsystem (Kern des zukünftigen Systems)
+
+### Quantitative Bewertung 
+
+Überprüfung von Architekturregeln und Bewertung anhand von Metriken
+- Anforderungen
+- Quellcode
+- Erstellungsprozess einer Software
+- Fehler
+- Tests
+- Design
+- System
 
 
 
