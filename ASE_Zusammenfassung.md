@@ -1391,7 +1391,7 @@ Accept: application/xml, application/json => Repräsentationsform, welche akzept
 
 ## Standartisierte Methoden
 
-**GET, POST, DELETE sind idempotent**
+**GET, PUT, DELETE sind idempotent**
 **Nur POST ist nicht idempotent**
 
 Idempotent => Hat einmal eine Wirkung, beim zweiten mal jedoch keine
