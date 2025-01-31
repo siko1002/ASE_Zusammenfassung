@@ -1920,9 +1920,183 @@ Weitere Verfahren:
 
 
 
+# Software Architektur Patterns
+
+## Charakteristiken von Software Architektur Patterns
+
+- Agilität
+    - Wie gut kann auf Änderungen reagiert werden?
+    - Wie invasiv sind Änderungen (Lokal/Global)
+- Deployment
+    - Aufwendigkeit des Deployments
+- Testbarkeit
+- Performance
+    - Was sind die typischen Antwortzeiten? => Können diese einfach verbessert werden?
+- Skalierbarkeit
+    - Kann Anwendung über mehrere Rechner betrieben werden?
+- Einfachheit
+    - Ist das Programmiermodell komplex/einfach zu verstehen?
+- Kosten
+
+## Architekturvarianten
+
+<img src="Bilder/SAP_Architekturvarianten.png" width=400>
+
+Unterteilung in Monolitische und verteilte Architekturen
+
+In Realität kommen oft auch Hybridformen vor
+
+<img src="Bilder/SAP_Hybridformen_von_Architekturvarianten.png" width=400>
+
+
+## Vor-/Nachteile Monolith vs. Verteilt
+
+Verteilte Systeme sehr gut in:
+- Performance
+- Skalierung
+- Verfügbarkeit
+
+Dadurch entsteht jedoch Komplexität durch:
+- Verteiltes Logging
+- Verteilte Transaktionen
+- Datentransfer
+- Versionsmanagement
+
+## Schichtenarchitektur
+
+Komponenten werden in Horizontalen Schichten zusammengefasst. Dabei hat jede Schicht eine spezielle Verantwortung (Seperation of Concerns)
+
+<img src="Bilder/SAP_Schichtenarchitektur.png" width=400>
+
+Das Schlüsselkonzept der Schichtenarchitektur ist Isolation => Jede Schicht kann ausgetauscht werden, da jede Schicht nur auf die Schicht direkt unter ihr zugreifen kann/soll.
+
+Problem können durch "offene" Schichten entstehen => Schichten leiten direkt durch zur unteren Schicht
+**Fast-Lane-Pattern**
+
+<img src="Bilder/SAP_Fast_Lane_Pattern_Bsp.png" width=400>
+
+> Heuristik: **Max 20% der Aufrufe einer Schicht sollten lediglich den Aufruf delegieren**
+
+Schichtenarchitektur führt zu technischer Trennung: UI-Designer, UI-Entwickler, Backend-Entwickler, DB-Experten, ...
+
+Use-Cases für Schichtenarchitektur:
+- Kleine einfache Anwendungen
+- Web Anwendungen
+- Techniche Proof of Concepts
+
+## Pipe & Filter - Architektur
+
+Besteht aus:
+- Pipes = (unidirektionale) Kommunikationskanäle
+- Filter = unabhängige (self-contained) Verarbeitungsprozesse
+    - Producer = (Datenquelle/Startpunkt)
+    - Transformer = Empfängt, verarbeitet und Sendet (input-transform-output)
+    - Consumer = Endverarbeitung
+
+<img src="Bilder/SAP_Pipes_and_Filter.png" width=400>
+
+
+## Microkernel - Architektur
+
+Hat den Sinn eine Kern-Anwendung beliebig um Plug-Ins erweitern zu können
+
+<img src="Bilder/SAP_Microkernel.png" width=400>
+
+Besteht aus:
+- Kern-System
+- Plugin-Module
+
+Bsp. Eclipse, FireFox, Chrome
+=> Anwendungen die eine Basisfunktionalität bereitstellen und durch bestimtme Plug-Ins erweitert werden können
+Zentrale Daten sollten nur über Core-System erreichbar sein
+
+Es gibt auch eine verteilte Variante der Microkernel-Architektur
+
+<img src="Bilder/SAP_Verteilte_Microkernel_Architektur.png" width=400>
 
 
 
+## Service-Based - Architektur
+
+Variante der Microservices => pragmatischer Architekturstil
+=> Services grobgranularer als Microservices
+
+<img src="Bilder/SAP_Service_Based_Architekture.png" width=400>
+
+
+> Charakteristik = zentrale Datenbank
+>> Nutzt ein Service exklusiv Daten können diese in einer eigenen Datenbank gehalten werden.
+
+Es können 1 - Anzahl Services User Interfaces vorkommen
+
+Architektur passt gut zu DDD-Ansatz
+
+Transaktionsdesign ist "relativ" einfach, da durch die Verwendung einer zentralen Datenbank die ACID-Eigenschaften der Datenbank genutzt werden können
+
+## Event Driven Architektur
+
+Wird häufig für verteilte Asynchrone Verarbeitungsstrukturen verwendet
+
+
+### Broker Topologie (vgl. Choreographie Pattern)
+
+Hier wird die Datenverarbeitung von einzelnen unabhängigen Komponenten übernommen
+=> Ablauf der Verarbeitung ist in Topologie verankert
+
+<img src="Bilder/SAP_Broker_Topology.png" width=400>
+
+
+### Mediator Topologie (vgl. Orchestrations Pattern)
+
+Mediator steuert den Verarbeitungsablauf
+
+<img src="Bilder/SAP_Mediator_Topology.png" width=400>
+
+
+In der Eventdriven Architektur kommen Reply-Queues und Korrelations IDs zum Einsatz (Rückkanäle für Antworten in Topics)
+
+
+### Space-Based Architektur
+
+Space-Based Architektur nutzt Konzepte des Grid-Computings
+=> Mehrere parallele Prozesse kommunizieren über gemeinsamen Speicher
+=> Replizierte In-Memory Datengitter garantieren hohe Skalierbarkeit, Elastizität und hohe Leistung (Zugriff auf zentrale DB entfällt)
+
+<img src="Bilder/SAP_Space_Based_Architektur.png" width=400>
+
+Typische Anwendungsfälle => Ticketverkauf, Auktionssysteme
+Client stellt Request an Middleware
+
+## Orchestrierte Serviceorientierte - Architektur
+Konzentriert sich auf Wiederverwendung auf Unternehmensebene
+
+<img src="Bilder/SAP_Orchestrierte_Serviceorientierte_Architektur.png" width=400>
+
+
+- Business Services: Grobkörnige Dienstleistungen, die auf dem allgemeinen Geschäftsverhalten basieren.
+- Enterprise Services: Bausteine, aus denen sich die grobkörnigen Business Services zusammensetzen, die über die Orchestrierungs-Engine miteinander verknüpft. werden.
+- Application Services: einmalige Implementierungen. Beispiel: Geolokalisierung, der nicht wiederverwendbar sein soll.
+- Infrastructure Services: betriebliche Belange wie Monitoring, Logging, Authentifizierung, Autorisierung, etc.
+- Orchestration Engine: Fügt Business-Service-Implementierungen durch Orchestrierung zusammen und übernimmt Funktionen wie Transaktionskoordination und Nachrichtentransformation.
+- Idee: Geschäftsprozesse können jederzeit angepasst und verändert werden
+    - Ohne das programmiert werden muss (Wiederverwendung)
+    - Schnelle Reaktion auf neue Marktanforderungen (time-to-market)
+
+## Microservice - Architektur
+
+<img src="Bilder/SAP_Microservice_Architekture.png" width=400>
+
+Philosophie von Microservices ist der Begriff: Bounded Context => Jeder Microservice modelliert Domäne/Workflow, außerdem Datenisolation
+
+Microservice = isolierte "self-contained systems"
+
+### Side Car Pattern
+
+<img src="Bilder/SAP_Side_Car_Pattern.png" width=400>
+
+### SAGAs als Transaktionsmodell von Microservices
+
+<img src="Bilder/SAP_Saga_als_Transaktionsmodell.png" width=400>
 
 
 
