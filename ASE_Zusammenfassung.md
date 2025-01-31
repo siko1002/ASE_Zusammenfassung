@@ -1916,6 +1916,153 @@ Weitere Verfahren:
 - Design
 - System
 
+# Software Architektur Patterns
+
+Software Architektur Patterns / Stile
+
+Zwei Kathegorien Monolithen(nicht verteilt) und Verteilt
+
+In der Praxis oft Hybridformen
+
+
+## Monolith versus Verteilt
+
+Verteilte System zeichnen sich aus durch
+- Gute Performance
+- Gute Skalierungsmöglichkeiten
+- Hohe Verfügbarkeit
+
+
+## Monolithische Architekturen
+
+### Schichtenarchitektur
+
+Fachlichkeit wird nicht beachtet
+
+Trennung nach Technischen Eigenschaften
+
+Fast lanes = Direkter Zugriff über 2 Layer => Macht man aus Performance Gründen (Meistens Fassacde)
+=> Machen Schichtenarchitektur kapput
+
+**Meistens angesehen als Antipattern**
+
+Architecture Sinkhole Antipattern (Fast nur noch Delegationen )
+
+Sind gut für:
+- Kleine Anwendungen
+- Web Anwendungen
+- Startpunkt für technische "Proff of Concepts"
+
+
+### Pipe & Filter - Architektur
+
+Fließband zur Datenverarbeitung
+
+Besteht aus:
+
+- Pipes = Kommunikationskanäle
+- Filter = Verarbeitungsprozesse
+
+Bsp. Compiler
+
+Producer = Datenquelle
+Transformer = Empfängt Daten, verarbeitet sie und sendet sie Weiter
+Consumeer = Endverarbeitung
+
+Ist Datengetrieben 
+Bsp. Kafka mit Filtern
+
+### Microkernal
+
+Core System mit Plug-In Componenten
+
+Beispiele: IDEs, Browser, FireFox, Chrome, etc.
+
+
+
+
+
+## Verteilte Architekturen
+
+### Service Based Architektur
+
+"Microservices für Arme"
+
+Charakteristisch ist eine zentrale Datenbank
+
+
+Im Grunde einfach Microservices mit einer zentralen Datenbank
+
+Varianten bezüglich des User-Interfaces
+- Single Monolithic User Interface
+- Domain-Based User Interface
+- Service-Based User Interface
+
+Es gibt auch Mischformen
+Wenn ein Service bsp. exklusiv Daten verwendet, kann dieser eine eigene DB verwenden
+
+Services können technisch oder anhand der Fachdomäne geschnitten werden
+
+Passt gut zum DDD
+Simples Transaktiondesign durch ACID-Eigenschaft der zentralen DB
+
+### Event-Driven Architektur
+
+Orchestrator oder Choreographie
+
+Wird Typischerweise mit REST gemacht (Request Based Model)
+
+Mediator Topologie = Orchestrator
+
+
+
+### Space-based Architektur 
+
+Mehrere parallele Prozessoren kommunizieren über einen gemeinsamen Speichert
+
+Beispiel (Ticketverkauf bei Tylor Swift, Auktionshaus)
+
+Client stellt Request an Middleware
+
+### Orchestrierte Serviceorientierte Architektur
+
+WDSL, SOAP wurden hier verwendet
+
+BPMN Prozesse
+
+
+Konzentriert sich auf Wiederverwendung auf Unternehmensebene
+
+Message Flow
+
+
+### Microservice Architektur
+
+Treibende Philosophie = Bounded Context
+
+Jeder Service modelliert Domäne oder Workflow
+
+Side-Car-Pattern
+
+Mesh-Frontend = Frontend was aus Bauteilen verschiedener Services bestehen
+
+Auch hier wieder Choreographie und Orchestrierung wichtig!
+
+Häufig SAGAs als Transaktionsmodell (Bei Orchestrierung)
+
+
+
+
+## Auswahl einer Architektur
+
+Entscheidungsmerkmale:
+Anwendungsbereiche
+
+Typische Fragestellungen 
+- Monolith vs. Verteilt
+- Wo liegen die Daten
+- Kommunikatonsstil: Synchron vs. Asynchron
+
 
 
 
